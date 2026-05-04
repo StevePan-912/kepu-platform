@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 科普漫步 - 智能科普服务平台
 
-## Getting Started
+## 项目简介
 
-First, run the development server:
+科普漫步是展览路街道"四层一体"智能科普服务体系的数字化平台，涵盖前端服务层、中端数据层、后端管理层、运营生态层四大模块。
+
+## 功能模块
+
+### 居民端（移动端）
+- **首页**：今日推荐、模块入口、热门话题
+- **资源地图**：附近科普点位、设备状态、详情查看
+- **AR探境**：3D模型展示、WebAR体验、语音讲解
+- **语音交互**：热词搜索、语音输入、内容推荐
+- **积分商城**：商品兑换、积分查询
+- **个人中心**：用户信息、积分记录、行为历史
+
+### 数据展示
+- **科普资源库**：分类浏览、内容详情
+- **居民画像**：兴趣标签、活跃度图表
+- **资源潜力地图**：三图层可视化
+
+### 管理后台
+- **设施监控**：设备状态、工单管理
+- **数据分析**：热词排行、活跃度曲线
+- **智能决策**：活动/内容/布点建议
+
+### 运营生态
+- **志愿者入口**：任务列表、时长记录
+- **荣誉展示**：季度/年度榜单
+
+## 技术栈
+
+- **前端**：Next.js 14 + Tailwind CSS + shadcn/ui
+- **后端**：Supabase (PostgreSQL + Auth + Storage)
+- **部署**：Vercel
+- **地图**：Leaflet + React-Leaflet
+- **AR**：model-viewer
+- **图表**：Recharts
+
+## 快速开始
+
+### 1. 安装依赖
+
+```bash
+npm install
+```
+
+### 2. 配置环境变量
+
+复制 `.env.local.example` 为 `.env.local`，填入 Supabase 配置：
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+### 3. 启动开发服务器
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+访问 http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 项目结构
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+kepu-platform/
+├── app/                    # Next.js 页面
+├── components/             # React 组件
+│   ├── ui/                 # shadcn/ui 基础组件
+│   ├── layout/             # 布局组件
+│   ├── map/                # 地图组件
+│   ├── ar/                 # AR组件
+│   ├── charts/             # 图表组件
+│   ├── common/             # 通用组件
+│   ├── admin/              # 管理后台组件
+│   ├── profile/            # 个人中心组件
+│   ├── volunteer/          # 志愿者组件
+│   ├── honors/             # 荣誉组件
+│   ├── data/               # 数据展示组件
+│   └── mall/               # 商城组件
+├── lib/                    # 工具库
+│   ├── supabase/           # Supabase 配置
+│   ├── hooks/              # React Hooks
+│   ├── utils/              # 工具函数
+│   ├── constants/          # 常量定义
+│   └── store/              # 状态管理
+├── public/                 # 静态资源
+└── supabase/               # 数据库脚本
+```
 
-## Learn More
+## 部署
 
-To learn more about Next.js, take a look at the following resources:
+### Vercel 部署
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. 将代码推送到 GitHub
+2. 在 Vercel 导入项目
+3. 配置环境变量
+4. 自动部署完成
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 开发团队
 
-## Deploy on Vercel
+| 成员 | 负责模块 |
+|------|----------|
+| 成员1 | 基础设施、Supabase配置、API接口 |
+| 成员2 | 前端服务层 |
+| 成员3 | 中端数据层 |
+| 成员4 | 后端管理层 |
+| 成员5 | 运营生态层 |
+| 成员6 | UI设计、测试、文档 |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 许可证
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT License
