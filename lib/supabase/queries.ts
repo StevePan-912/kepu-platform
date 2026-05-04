@@ -31,7 +31,7 @@ export async function getDeviceById(id: string) {
 
 // 记录用户行为
 export async function recordActivity(activity: Partial<UserActivity>) {
-  return supabase.from('user_activities').insert(activity)
+  return supabase.from('user_activities').insert(activity as UserActivity)
 }
 
 // 获取用户行为历史
