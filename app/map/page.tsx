@@ -1,9 +1,7 @@
 import type { Metadata } from 'next'
 import { getDevices } from '@/lib/supabase/queries'
 import type { Device } from '@/lib/supabase/types'
-import { DEVICE_TYPES } from '@/lib/constants/categories'
-import Link from 'next/link'
-import { MapWrapper } from '@/components/map/MapWrapper'
+import { MapPageClient } from './MapPageClient'
 
 export const metadata: Metadata = {
   title: '资源地图 - 科普漫步',
@@ -87,7 +85,6 @@ const MOCK_DEVICES: Device[] = [
 ]
 
 export default async function MapPage() {
-  // 尝试从 Supabase 拉取数据，失败则使用 Mock 数据
   let devices: Device[] = MOCK_DEVICES
   try {
     const { data, error } = await getDevices()
@@ -98,52 +95,5 @@ export default async function MapPage() {
     // Supabase 未配置，使用 Mock 数据
   }
 
-  const onlineCount = devices.filter((d) => d.status === 'online').length
-  const typeStats = Object.entries(DEVICE_TYPES).map(([key, info]) => ({
-    key,
-    label: info.label,
-    count: devices.filter((d) => d.type === key).length,
-  }))
-
-  return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      {/* 顶部导航栏 */}
-      <header className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-3 shrink-0 z-10">
-        <Link href="/" className="text-gray-500 hover:text-gray-700 text-xl leading-none">
-          ←
-        </Link>
-        <div className="flex-1">
-          <h1 className="font-bold text-gray-900 text-base leading-tight">资源地图</h1>
-          <p className="text-xs text-gray-400">周边科普设施实时分布</p>
-        </div>
-        {/* 在线统计 */}
-        <div className="flex items-center gap-1.5 bg-green-50 px-3 py-1.5 rounded-full">
-          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-xs font-medium text-green-700">{onlineCount} 在线</span>
-        </div>
-      </header>
-
-      {/* 设备类型快捷统计条 */}
-      <div className="bg-white border-b border-gray-100 px-4 py-2 flex gap-4 overflow-x-auto shrink-0">
-        {typeStats.map(({ key, label, count }) => (
-          <div key={key} className="flex items-center gap-1.5 shrink-0">
-            <span className="text-xs text-gray-500">{label}</span>
-            <span className="text-xs font-semibold text-gray-800 bg-gray-100 rounded-full px-1.5 py-0.5">
-              {count}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* 地图主体 */}
-      <div className="flex-1 relative overflow-hidden">
-        <MapWrapper devices={devices} />
-      </div>
-
-      {/* 底部提示 */}
-      <div className="bg-white border-t border-gray-100 px-4 py-2 text-center shrink-0">
-        <p className="text-xs text-gray-400">点击地图标记查看设备详情 · 支持拖拽和缩放</p>
-      </div>
-    </div>
-  )
+  return <MapPageClient devices={devices} />
 }
