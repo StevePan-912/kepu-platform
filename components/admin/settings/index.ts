@@ -1,0 +1,5 @@
+export { SettingsProfile } from './SettingsProfile'
+export { SettingsNotifications } from './SettingsNotifications'
+export { SettingsSecurity } from './SettingsSecurity'
+export { SettingsConfig } from './SettingsConfig'
+export { SettingsAbout } from './SettingsAbout'
