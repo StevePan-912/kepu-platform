@@ -99,6 +99,20 @@ export interface CategoryDistributionItem {
   percentage: number
 }
 
+// 热门区域分析
+export interface HotAreaItem {
+  area: string
+  activityCount: number
+  deviceCount: number
+}
+
+// 用户偏好分析
+export interface UserPreferenceItem {
+  category: string
+  count: number
+  percentage: number
+}
+
 // API 统一响应格式
 export interface ApiResponse<T> {
   data: T | null

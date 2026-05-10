@@ -36,7 +36,7 @@ export function useUser(): UseUserReturn {
   }, [fetchUser])
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
+    supabase.auth.getSession().then(({ data: { session: s } }: any) => {
       setSession(s)
       if (s?.user) {
         fetchUser(s.user.id).finally(() => setLoading(false))
@@ -45,7 +45,7 @@ export function useUser(): UseUserReturn {
       }
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, s: any) => {
       setSession(s)
       if (s?.user) {
         fetchUser(s.user.id)

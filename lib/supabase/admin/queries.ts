@@ -9,6 +9,8 @@ import type {
   AdminResourceStats,
   AdminUserGrowthStats,
   CategoryDistributionItem,
+  HotAreaItem,
+  UserPreferenceItem,
   PaginationParams,
   PaginatedResponse,
 } from './types'
@@ -225,21 +227,33 @@ export async function getActivityStats(
 // ==================== 决策建议 ====================
 
 /**
- * 获取决策建议列表
+ * 获取决策建议列表（支持 type 和 status 筛选）
  */
 export async function getDecisionSuggestions(
-  params: PaginationParams = { page: 1, pageSize: 20 }
+  params: PaginationParams & { type?: string; status?: string } = { page: 1, pageSize: 20 }
 ): Promise<{ data: PaginatedResponse<AdminDecisionSuggestion> | null; error: string | null }> {
   try {
-    const { page, pageSize } = params
+    const { page, pageSize, type, status } = params
     const from = (page - 1) * pageSize
     const to = from + pageSize - 1
 
-    const { data, error, count } = await supabase
+    let query = supabase
       .from('decision_suggestions')
       .select('*', { count: 'exact' })
-      .order('priority', { ascending: false })
-      .range(from, to)
+
+    // 类型筛选
+    if (type && type !== 'all') {
+      query = query.eq('type', type)
+    }
+
+    // 状态筛选（active = is_active: true, inactive = is_active: false）
+    if (status && status !== 'all') {
+      query = query.eq('is_active', status === 'active')
+    }
+
+    query = query.order('priority', { ascending: false }).range(from, to)
+
+    const { data, error, count } = await query
 
     if (error) throw error
 
@@ -547,6 +561,118 @@ export async function getCategoryDistribution(): Promise<{ data: CategoryDistrib
     })
 
     const result: CategoryDistributionItem[] = Object.entries(categoryCount)
+      .map(([category, count]) => ({
+        category,
+        count,
+        percentage: total > 0 ? Math.round((count / total) * 1000) / 10 : 0,
+      }))
+      .sort((a, b) => b.count - a.count)
+
+    return { data: result, error: null }
+  } catch (e) {
+    return { data: null, error: (e as Error).message }
+  }
+}
+
+// ==================== 决策建议写入 ====================
+
+/**
+ * 新增一条决策建议
+ */
+export async function createDecisionSuggestion(
+  suggestion: Omit<AdminDecisionSuggestion, 'id' | 'created_at'>
+): Promise<{ data: any | null; error: string | null }> {
+  try {
+    const { data, error } = await supabase
+      .from('decision_suggestions')
+      .insert([suggestion])
+      .select()
+      .single()
+
+    if (error) throw error
+    return { data, error: null }
+  } catch (e) {
+    return { data: null, error: (e as Error).message }
+  }
+}
+
+// ==================== 热门区域分析 ====================
+
+/**
+ * 获取热门区域排名（按设备活动次数）
+ */
+export async function getHotAreas(
+  limit: number = 10
+): Promise<{ data: HotAreaItem[] | null; error: string | null }> {
+  try {
+    const { data, error } = await supabase
+      .from('user_activities')
+      .select(`
+        device_id,
+        devices:devices ( name, location )
+      `)
+      .not('device_id', 'is', null)
+
+    if (error) throw error
+
+    const areaMap = new Map<string, { activityCount: number; deviceIds: Set<string> }>()
+
+    data?.forEach((activity: any) => {
+      if (activity.device_id && activity.devices) {
+        const location = activity.devices.location || activity.devices.name || activity.device_id
+        const existing = areaMap.get(location) || { activityCount: 0, deviceIds: new Set() }
+        existing.activityCount++
+        existing.deviceIds.add(activity.device_id)
+        areaMap.set(location, existing)
+      }
+    })
+
+    const result: HotAreaItem[] = Array.from(areaMap.entries())
+      .map(([area, { activityCount, deviceIds }]) => ({
+        area,
+        activityCount,
+        deviceCount: deviceIds.size,
+      }))
+      .sort((a, b) => b.activityCount - a.activityCount)
+      .slice(0, limit)
+
+    return { data: result, error: null }
+  } catch (e) {
+    return { data: null, error: (e as Error).message }
+  }
+}
+
+// ==================== 用户偏好分析 ====================
+
+/**
+ * 获取用户偏好分布（按资源分类）
+ */
+export async function getUserPreferences(
+  days: number = 30
+): Promise<{ data: UserPreferenceItem[] | null; error: string | null }> {
+  try {
+    const startDate = new Date()
+    startDate.setDate(startDate.getDate() - days)
+
+    const { data, error } = await supabase
+      .from('user_activities')
+      .select(`
+        resources ( category )
+      `)
+      .gte('created_at', startDate.toISOString())
+      .not('resource_id', 'is', null)
+
+    if (error) throw error
+
+    const total = data?.length || 0
+    const categoryCount: Record<string, number> = {}
+
+    data?.forEach((activity: any) => {
+      const cat = activity.resources?.category || '未分类'
+      categoryCount[cat] = (categoryCount[cat] || 0) + 1
+    })
+
+    const result: UserPreferenceItem[] = Object.entries(categoryCount)
       .map(([category, count]) => ({
         category,
         count,

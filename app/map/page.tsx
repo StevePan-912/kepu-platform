@@ -1,27 +1,14 @@
 import type { Metadata } from 'next'
-import dynamic from 'next/dynamic'
 import { getDevices } from '@/lib/supabase/queries'
 import type { Device } from '@/lib/supabase/types'
 import { DEVICE_TYPES } from '@/lib/constants/categories'
 import Link from 'next/link'
+import { MapWrapper } from '@/components/map/MapWrapper'
 
 export const metadata: Metadata = {
   title: '资源地图 - 科普漫步',
   description: '查看周边科普设施点位、实时状态与科普内容',
 }
-
-// 动态加载地图容器（纯客户端）
-const MapContainer = dynamic(() => import('@/components/map/MapContainer'), {
-  ssr: false,
-  loading: () => (
-    <div className="flex-1 flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <div className="w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-        <p className="text-sm text-gray-500">地图加载中…</p>
-      </div>
-    </div>
-  ),
-})
 
 // Mock 数据（Supabase 未连接时的展示数据）
 const MOCK_DEVICES: Device[] = [
@@ -150,7 +137,7 @@ export default async function MapPage() {
 
       {/* 地图主体 */}
       <div className="flex-1 relative overflow-hidden">
-        <MapContainer devices={devices} />
+        <MapWrapper devices={devices} />
       </div>
 
       {/* 底部提示 */}
