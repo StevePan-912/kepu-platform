@@ -1,5 +1,7 @@
 'use client'
 
+export const dynamic = 'force-dynamic'
+
 import Link from 'next/link'
 import { NavBar } from '@/components/layout/NavBar'
 import { MobileNav } from '@/components/layout/MobileNav'
