@@ -1,3 +1,5 @@
+'use client'
+
 import { HONOR_LEVELS } from '@/lib/constants/categories'
 
 interface PointsBadgeProps {
