@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['open.feishu.cn'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'open.feishu.cn',
+      },
+    ],
   },
 }
 
