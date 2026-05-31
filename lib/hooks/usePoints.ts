@@ -13,6 +13,12 @@ const DEMO_RECORDS: PointRecord[] = [
   { id: '5', user_id: '00000000-0000-0000-0000-000000000001', points: 80, reason: '参与志愿者活动', created_at: '2026-05-26T16:00:00Z' },
 ]
 
+/** 检测 Supabase 是否已配置真实凭据 */
+const isSupabaseConfigured = (() => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
+  return url.startsWith('https://') && !url.includes('placeholder')
+})()
+
 export function usePoints() {
   const { user } = useUser()
   const [records, setRecords] = useState<PointRecord[]>([])
@@ -27,6 +33,11 @@ export function usePoints() {
   const fetchRecords = async () => {
     if (!user) return
     setLoading(true)
+    if (!isSupabaseConfigured) {
+      setRecords(DEMO_RECORDS)
+      setLoading(false)
+      return
+    }
     try {
       const { data } = await supabase
         .from('point_records')

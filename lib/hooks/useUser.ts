@@ -16,6 +16,12 @@ const DEMO_USER: User = {
   updated_at: '2026-05-31T00:00:00Z',
 }
 
+/** 检测 Supabase 是否已配置真实凭据 */
+const isSupabaseConfigured = (() => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
+  return url.startsWith('https://') && !url.includes('placeholder')
+})()
+
 export function useUser() {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
@@ -31,16 +37,20 @@ export function useUser() {
 
   const fetchUser = async (userId: string) => {
     setLoading(true)
+    if (!isSupabaseConfigured) {
+      // 无有效 Supabase 配置，直接使用 mock 数据（秒级响应）
+      setUser(DEMO_USER)
+      setLoading(false)
+      return
+    }
     try {
       const { data, error } = await supabase.from('users').select('*').eq('id', userId).single() as unknown as { data: User | null; error: any }
       if (!error && data) {
         setUser(data)
       } else {
-        // Supabase 不可用时使用 mock 数据
         setUser(DEMO_USER)
       }
     } catch {
-      // 网络或配置错误时使用 mock 数据
       setUser(DEMO_USER)
     }
     setLoading(false)
