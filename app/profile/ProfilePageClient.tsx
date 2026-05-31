@@ -35,11 +35,11 @@ export default function ProfilePageClient() {
     } else {
       // 演示数据
       setActivities([
-        { id: '1', user_id: user.id, action_type: 'play_audio', search_keyword: null, duration_seconds: 120, created_at: '2026-05-26T10:00:00Z' },
-        { id: '2', user_id: user.id, action_type: 'scan_ar', search_keyword: null, duration_seconds: null, created_at: '2026-05-25T15:30:00Z' },
-        { id: '3', user_id: user.id, action_type: 'search', search_keyword: '恐龙', duration_seconds: null, created_at: '2026-05-25T14:00:00Z' },
-        { id: '4', user_id: user.id, action_type: 'feedback', search_keyword: null, duration_seconds: null, created_at: '2026-05-24T09:00:00Z' },
-        { id: '5', user_id: user.id, action_type: 'activity_join', search_keyword: null, duration_seconds: null, created_at: '2026-05-23T16:00:00Z' },
+        { id: '1', user_id: user.id, action: 'play_audio', resource_id: null, device_id: null, keyword: null, duration: 120, created_at: '2026-05-26T10:00:00Z' },
+        { id: '2', user_id: user.id, action: 'scan_ar', resource_id: null, device_id: null, keyword: null, duration: null, created_at: '2026-05-25T15:30:00Z' },
+        { id: '3', user_id: user.id, action: 'search', resource_id: null, device_id: null, keyword: '恐龙', duration: null, created_at: '2026-05-25T14:00:00Z' },
+        { id: '4', user_id: user.id, action: 'feedback', resource_id: null, device_id: null, keyword: null, duration: null, created_at: '2026-05-24T09:00:00Z' },
+        { id: '5', user_id: user.id, action: 'join_activity', resource_id: null, device_id: null, keyword: null, duration: null, created_at: '2026-05-23T16:00:00Z' },
       ] as unknown as UserActivity[])
     }
     setActivitiesLoading(false)
