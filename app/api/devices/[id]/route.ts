@@ -20,6 +20,7 @@ export async function GET(_request: NextRequest, { params }: Params) {
     }
     return NextResponse.json(apiSuccess(data))
   } catch (err) {
+    console.error('[API Route Error]', '/api/devices/[id]', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

@@ -10,18 +10,18 @@ import type { HotWord, Resource } from '@/lib/supabase/types'
 
 // Mock数据用于降级
 const MOCK_HOT_WORDS: HotWord[] = [
-  { id: '1', word: '黑洞', count: 1256, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '2', word: '恐龙', count: 1089, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '3', word: '火星', count: 987, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '4', word: '星座', count: 856, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '5', word: '望远镜', count: 743, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '6', word: '太阳系', count: 698, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '7', word: '植物', count: 654, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '8', word: '社区', count: 621, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '9', word: '星空', count: 589, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '10', word: '化石', count: 543, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '11', word: '极光', count: 512, period: 'weekly', updated_at: new Date().toISOString() },
-  { id: '12', word: '生态', count: 487, period: 'weekly', updated_at: new Date().toISOString() },
+  { id: '1', word: '黑洞', count: 1256, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '2', word: '恐龙', count: 1089, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '3', word: '火星', count: 987, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '4', word: '星座', count: 856, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '5', word: '望远镜', count: 743, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '6', word: '太阳系', count: 698, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '7', word: '植物', count: 654, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '8', word: '社区', count: 621, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '9', word: '星空', count: 589, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '10', word: '化石', count: 543, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '11', word: '极光', count: 512, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
+  { id: '12', word: '生态', count: 487, period: 'weekly', stat_date: null, created_at: new Date().toISOString(), updated_at: new Date().toISOString() },
 ]
 
 const MOCK_RESOURCES: Resource[] = [
@@ -31,11 +31,13 @@ const MOCK_RESOURCES: Resource[] = [
     category: 'astronomy',
     type: 'audio',
     content_url: null,
-    duration_seconds: 300,
+    duration: 300,
     description: '探索宇宙中最神秘的天体——黑洞的奥秘，了解黑洞是如何形成的，以及它如何影响周围的时空。',
-    source_provider: '科普漫步',
-    tags: [],
+    source: '科普漫步',
+    tags: [] as any,
+    view_count: 0,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: 'mock-2',
@@ -43,11 +45,13 @@ const MOCK_RESOURCES: Resource[] = [
     category: 'paleontology',
     type: 'video',
     content_url: null,
-    duration_seconds: 600,
+    duration: 600,
     description: '6500万年前，恐龙从地球上消失了。让我们一起探索可能导致恐龙灭绝的各种假说。',
-    source_provider: '科普漫步',
-    tags: [],
+    source: '科普漫步',
+    tags: [] as any,
+    view_count: 0,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: 'mock-3',
@@ -55,11 +59,13 @@ const MOCK_RESOURCES: Resource[] = [
     category: 'astronomy',
     type: 'audio',
     content_url: null,
-    duration_seconds: 420,
+    duration: 420,
     description: '火星为什么是红色的？人类有机会移居火星吗？本期节目带你了解火星的奥秘。',
-    source_provider: '科普漫步',
-    tags: [],
+    source: '科普漫步',
+    tags: [] as any,
+    view_count: 0,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
   {
     id: 'mock-4',
@@ -67,11 +73,13 @@ const MOCK_RESOURCES: Resource[] = [
     category: 'botany',
     type: 'text',
     content_url: null,
-    duration_seconds: null,
+    duration: null,
     description: '植物是如何利用阳光、二氧化碳和水制造食物的？让我们深入了解光合作用的神奇过程。',
-    source_provider: '科普漫步',
-    tags: [],
+    source: '科普漫步',
+    tags: [] as any,
+    view_count: 0,
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   },
 ]
 
@@ -91,7 +99,7 @@ function VoiceContent() {
   useEffect(() => {
     async function loadHotWords() {
       try {
-        const { data } = await getHotWords('weekly', 12)
+        const { data } = await getHotWords('weekly', 12) as unknown as { data: HotWord[] | null; error: any }
         if (data && data.length > 0) {
           setHotWords(data)
         }
@@ -107,7 +115,7 @@ function VoiceContent() {
     async function loadRecommended() {
       setIsLoading(true)
       try {
-        const { data } = await getResources()
+        const { data } = await getResources() as unknown as { data: Resource[] | null; error: any }
         if (data && data.length > 0) {
           setRecommendedResources(data.slice(0, 6))
         } else {
@@ -133,7 +141,7 @@ function VoiceContent() {
 
     setIsLoading(true)
     try {
-      const { data } = await getResources()
+      const { data } = await getResources() as unknown as { data: Resource[] | null; error: any }
       if (data && data.length > 0) {
         const filtered = data.filter(
           (r) =>
@@ -259,33 +267,6 @@ function VoiceContent() {
           </div>
         </>
       )}
-    </div>
-  )
-}
-
-// 加载状态组件
-function VoiceLoading() {
-  return (
-    <div className="px-4 pt-4 space-y-4">
-      <div className="flex items-center gap-2">
-        <span className="text-2xl">🎤</span>
-        <h1 className="text-xl font-bold text-gray-900">语音交互</h1>
-      </div>
-      <div className="bg-white rounded-xl p-4 animate-pulse">
-        <div className="h-12 bg-gray-200 rounded-lg" />
-      </div>
-      <div className="space-y-3">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white rounded-xl p-4 animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-1/4 mb-3" />
-            <div className="flex flex-wrap gap-2">
-              <div className="h-6 w-16 bg-gray-200 rounded-full" />
-              <div className="h-6 w-20 bg-gray-200 rounded-full" />
-              <div className="h-6 w-14 bg-gray-200 rounded-full" />
-            </div>
-          </div>
-        ))}
-      </div>
     </div>
   )
 }

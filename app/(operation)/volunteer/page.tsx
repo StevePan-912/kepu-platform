@@ -46,7 +46,7 @@ export default function VolunteerPage() {
   }
 
   // 计算总志愿时长
-  const totalHours = myRecords.reduce((sum, r) => sum + (r.hours || 0), 0)
+  const totalHours = myRecords.reduce((sum, r) => sum + (r.service_hours || 0), 0)
 
   if (!user) {
     return (

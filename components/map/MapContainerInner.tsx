@@ -8,8 +8,8 @@ import { DeviceMarker, MapFilter, DeviceDetailPanel } from './index'
 import { useAppStore } from '@/lib/store'
 import { useRouter } from 'next/navigation'
 
-// 展览路街道中心坐标（上海杨浦区）
-const DEFAULT_CENTER: [number, number] = [31.2720, 121.5168]
+// 默认中心坐标（北京）
+const DEFAULT_CENTER: [number, number] = [39.932, 116.352]
 const DEFAULT_ZOOM = 16
 
 interface Props {
@@ -20,8 +20,8 @@ interface Props {
 function FlyToDevice({ device }: { device: Device | null }) {
   const map = useMap()
   useEffect(() => {
-    if (device?.lat != null && device?.lng != null) {
-      map.flyTo([device.lat, device.lng], 18, { duration: 0.8 })
+    if (device?.latitude != null && device?.longitude != null) {
+      map.flyTo([device.latitude, device.longitude], 18, { duration: 0.8 })
     }
   }, [device, map])
   return null

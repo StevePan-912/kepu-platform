@@ -156,7 +156,7 @@ export function SettingsAbout() {
         <p className="flex items-center justify-center gap-1">
           Made with <Heart className="w-3 h-3 text-red-400" /> by 科普漫步团队
         </p>
-        <p className="mt-0.5">© 2024 科普漫步. All rights reserved.</p>
+        <p className="mt-0.5">© 2026 科普漫步. All rights reserved.</p>
       </div>
     </div>
   )

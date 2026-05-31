@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       .from('users')
       .select('role')
       .eq('id', user.id)
-      .single()
+      .single() as { data: { role: string } | null; error: any }
     if (roleError || userRecord?.role !== 'admin') {
       return NextResponse.json(apiError('权限不足'), { status: 403 })
     }
@@ -48,6 +48,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(apiSuccess({ items: data, total: count, limit, offset }))
   } catch (err) {
+    console.error('[API Route Error]', '/api/admin/users', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }
@@ -68,7 +69,7 @@ export async function PATCH(request: NextRequest) {
 
     const serviceClient = createServerClient()
     const { data: userRecord } = await serviceClient
-      .from('users').select('role').eq('id', user.id).single()
+      .from('users').select('role').eq('id', user.id).single() as { data: { role: string } | null; error: any }
     if (userRecord?.role !== 'admin') {
       return NextResponse.json(apiError('权限不足'), { status: 403 })
     }
@@ -82,12 +83,13 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json(apiError('无效的角色值'), { status: 400 })
     }
 
-    const { data, error } = await serviceClient
-      .from('users').update({ role }).eq('id', user_id).select().single()
+    const { data, error } = await (serviceClient
+      .from('users') as any).update({ role }).eq('id', user_id).select().single() as { data: any; error: any }
     if (error) return NextResponse.json(apiError(error.message), { status: 500 })
 
     return NextResponse.json(apiSuccess(data))
   } catch (err) {
+    console.error('[API Route Error]', '/api/admin/users', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

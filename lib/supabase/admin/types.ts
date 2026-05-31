@@ -34,7 +34,7 @@ export interface AdminUserStats {
 export interface AdminDecisionSuggestion {
   id: string
   type: 'activity' | 'content' | 'location'
-  suggestion_text: string
+  suggestion: string
   priority: number
   is_active: boolean
   created_at: string

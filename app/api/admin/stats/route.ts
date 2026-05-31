@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       .from('users')
       .select('role')
       .eq('id', user.id)
-      .single()
+      .single() as { data: { role: string } | null; error: any }
 
     if (roleError || userRecord?.role !== 'admin') {
       return NextResponse.json(apiError('权限不足'), { status: 403 })
@@ -39,21 +39,21 @@ export async function GET(request: NextRequest) {
     // 并行拉取各维度统计
     const [activityRes, usersRes, resourcesRes, devicesRes] = await Promise.all([
       getActivityStats(days),
-      serviceClient.from('users').select('id, role, created_at', { count: 'exact' }),
-      serviceClient.from('resources').select('id', { count: 'exact' }),
-      serviceClient.from('devices').select('id, status', { count: 'exact' }),
+      serviceClient.from('users').select('id, role, created_at', { count: 'exact' }) as any,
+      serviceClient.from('resources').select('id', { count: 'exact' }) as any,
+      serviceClient.from('devices').select('id, status', { count: 'exact' }) as any,
     ])
 
     // 按日期聚合行为数据
     const activityByDate: Record<string, number> = {}
     if (activityRes.data) {
-      for (const row of activityRes.data) {
+      for (const row of (activityRes.data as any[])) {
         const date = row.created_at.split('T')[0]
         activityByDate[date] = (activityByDate[date] ?? 0) + 1
       }
     }
 
-    const onlineDevices = devicesRes.data?.filter((d) => d.status === 'online').length ?? 0
+    const onlineDevices = (devicesRes.data as any[])?.filter((d: any) => d.status === 'online').length ?? 0
 
     return NextResponse.json(apiSuccess({
       period_days: days,
@@ -64,6 +64,7 @@ export async function GET(request: NextRequest) {
       activity_trend: activityByDate,
     }))
   } catch (err) {
+    console.error('[API Route Error]', '/api/admin/stats', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

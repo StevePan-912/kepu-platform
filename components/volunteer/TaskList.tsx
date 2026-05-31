@@ -44,7 +44,7 @@ export function TaskList({ tasks, loading, onJoin }: TaskListProps) {
             <div className="mt-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-purple-500 font-medium">
-                  +{task.points_reward} 积分
+                  +{task.reward_points} 积分
                 </span>
               </div>
               

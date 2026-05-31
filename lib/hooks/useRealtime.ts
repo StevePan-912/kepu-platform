@@ -161,7 +161,7 @@ export function createPresenceChannel<T extends Record<string, unknown>>(
   onJoin?: (presence: T) => void,
   onLeave?: (presence: T) => void
 ) {
-  const channel = supabase.channel(channelName, {
+  const channel: any = supabase.channel(channelName, {
     config: {
       presence: { key: presenceKey },
     },
@@ -169,14 +169,14 @@ export function createPresenceChannel<T extends Record<string, unknown>>(
 
   channel
     .on('presence', { event: 'sync' }, () => {
-      const state = channel.presenceState<T>()
+      const state = channel.presenceState()
       onSync?.()
       console.log('[Presence] 在线用户:', Object.keys(state).length)
     })
-    .on('presence', { event: 'join' }, ({ key, newPresences }: never) => {
+    .on('presence', { event: 'join' }, ({ key, newPresences }: any) => {
       onJoin?.(newPresences as T)
     })
-    .on('presence', { event: 'leave' }, ({ key, leftPresences }: never) => {
+    .on('presence', { event: 'leave' }, ({ key, leftPresences }: any) => {
       onLeave?.(leftPresences as T)
     })
     .subscribe()
@@ -193,10 +193,10 @@ export function createBroadcastChannel<T extends Record<string, unknown>>(
   eventName: string,
   onMessage: (payload: T) => void
 ) {
-  const channel = supabase.channel(channelName)
+  const channel: any = supabase.channel(channelName)
 
   channel
-    .on('broadcast', { event: eventName }, (payload: never) => {
+    .on('broadcast', { event: eventName }, (payload: any) => {
       onMessage(payload as T)
     })
     .subscribe()

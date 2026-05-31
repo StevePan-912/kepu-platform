@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Edge Function: cleanup
  * 定时清理过期数据

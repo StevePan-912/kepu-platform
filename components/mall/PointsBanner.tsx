@@ -23,7 +23,7 @@ export default function PointsBanner({ onLoginDemo }: PointsBannerProps) {
     leader: { label: '领航者', color: 'text-yellow-400', bg: 'bg-yellow-400/20' },
   }
 
-  const honor = user?.honor_level ? honorLabels[user.honor_level] : null
+  const honor = user?.honor_level ? (honorLabels as Record<string, { label: string; color: string; bg: string }>)[user.honor_level] : null
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 p-5 text-white shadow-lg">

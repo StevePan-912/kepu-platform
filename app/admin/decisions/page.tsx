@@ -1,6 +1,6 @@
-import { DecisionStats, DecisionGenerator, DecisionSuggestions, HotAreaAnalysis, UserPreferenceAnalysis } from '@/components/admin/decisions'
+'use client'
 
-export const dynamic = 'force-dynamic'
+import { DecisionStats, DecisionGenerator, DecisionSuggestions, HotAreaAnalysis, UserPreferenceAnalysis } from '@/components/admin/decisions'
 
 export default function DecisionsPage() {
   return (

@@ -30,11 +30,11 @@ export async function getResidentPortrait(
       volunteerRes,
       exchangesRes,
     ] = await Promise.all([
-      supabase.from('users').select('*').eq('id', userId).single(),
-      supabase.from('user_activities').select('action_type, created_at').eq('user_id', userId),
-      supabase.from('point_records').select('points, created_at').eq('user_id', userId),
-      supabase.from('volunteer_records').select('status, task_id').eq('user_id', userId),
-      supabase.from('exchanges').select('status').eq('user_id', userId),
+      supabase.from('users').select('*').eq('id', userId).single() as unknown as { data: any; error: any },
+      supabase.from('user_activities').select('action, created_at').eq('user_id', userId) as unknown as { data: { action: string; created_at: string }[] | null; error: any },
+      supabase.from('point_records').select('points, created_at').eq('user_id', userId) as unknown as { data: { points: number; created_at: string }[] | null; error: any },
+      supabase.from('volunteer_records').select('status, task_id').eq('user_id', userId) as unknown as { data: { status: string; task_id: string }[] | null; error: any },
+      supabase.from('exchanges').select('status').eq('user_id', userId) as unknown as { data: { status: string }[] | null; error: any },
     ])
 
     if (userRes.error) throw userRes.error
@@ -45,7 +45,7 @@ export async function getResidentPortrait(
     let lastActiveAt: string | null = null
     const activities = activitiesRes.data ?? []
     for (const act of activities) {
-      activityBreakdown[act.action_type] = (activityBreakdown[act.action_type] ?? 0) + 1
+      activityBreakdown[act.action] = (activityBreakdown[act.action] ?? 0) + 1
       if (!lastActiveAt || act.created_at > lastActiveAt) {
         lastActiveAt = act.created_at
       }
@@ -103,7 +103,7 @@ export async function getResidentActivitySummaries(
       .from('users')
       .select('id, nickname, honor_level, points')
       .order('points', { ascending: false })
-      .limit(limit)
+      .limit(limit) as unknown as { data: { id: string; nickname: string; honor_level: string | null; points: number }[] | null; error: any }
 
     if (userErr) throw userErr
 
@@ -115,7 +115,7 @@ export async function getResidentActivitySummaries(
       .from('user_activities')
       .select('user_id, created_at')
       .in('user_id', userIds)
-      .order('created_at', { ascending: false })
+      .order('created_at', { ascending: false }) as unknown as { data: { user_id: string; created_at: string }[] | null; error: any }
 
     // 每用户最后活跃时间 & 活动总数
     const lastActiveMap = new Map<string, string>()
@@ -156,16 +156,16 @@ export async function getResidentSearchProfile(
   try {
     const { data, error } = await supabase
       .from('user_activities')
-      .select('search_keyword')
+      .select('keyword')
       .eq('user_id', userId)
-      .eq('action_type', 'search')
-      .not('search_keyword', 'is', null)
+      .eq('action', 'search')
+      .not('keyword', 'is', null) as unknown as { data: { keyword: string | null }[] | null; error: any }
 
     if (error) throw error
 
     const keywordCount: Record<string, number> = {}
     for (const act of data ?? []) {
-      const kw = act.search_keyword!
+      const kw = act.keyword!
       keywordCount[kw] = (keywordCount[kw] ?? 0) + 1
     }
 
@@ -208,7 +208,7 @@ export async function getResidentPointTrend(
       .select('points, created_at')
       .eq('user_id', userId)
       .gte('created_at', startDate.toISOString())
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: true }) as unknown as { data: { points: number; created_at: string }[] | null; error: any }
 
     if (error) throw error
 
@@ -255,10 +255,10 @@ export async function getResidentPreference(
 
     const { data, error } = await supabase
       .from('user_activities')
-      .select('duration_seconds, resources:resource_id(category, type)')
+      .select('duration, resources:resource_id(category, type)')
       .eq('user_id', userId)
       .gte('created_at', startDate.toISOString())
-      .not('resource_id', 'is', null)
+      .not('resource_id', 'is', null) as unknown as { data: any[] | null; error: any }
 
     if (error) throw error
 
@@ -271,7 +271,7 @@ export async function getResidentPreference(
       const res = act.resources as { category: string; type: string } | null
       if (res?.category) catCount[res.category] = (catCount[res.category] ?? 0) + 1
       if (res?.type) typeCount[res.type] = (typeCount[res.type] ?? 0) + 1
-      totalDuration += act.duration_seconds ?? 0
+      totalDuration += act.duration ?? 0
     }
 
     const toPercent = (count: number) =>

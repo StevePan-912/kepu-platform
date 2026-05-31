@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect } from 'react'
 import type { Resource } from '@/lib/supabase/types'
 import { getResourceById, getResources } from '@/lib/supabase/queries'
 import { useUser } from '@/lib/hooks/useUser'
@@ -32,18 +32,24 @@ const typeIcons: Record<string, { icon: typeof Headphones; label: string; color:
 const DEMO_RESOURCES: Resource[] = [
   {
     id: 'demo-1', title: '太阳系的奥秘', category: 'astronomy', type: 'video',
-    content_url: null, duration_seconds: 480,
+    content_url: null, duration: 480,
     description: '从水星到海王星，探索太阳系八大行星的独特魅力。了解每颗行星的大小、距离、温度等关键信息，感受宇宙的壮阔。',
+    source: null, tags: [] as any, view_count: 0,
+    created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
   },
   {
     id: 'demo-2', title: '恐龙时代的植物', category: 'paleontology', type: 'audio',
-    content_url: null, duration_seconds: 300,
+    content_url: null, duration: 300,
     description: '回到侏罗纪和白垩纪时期，了解恐龙与古代植物之间密不可分的关系。',
+    source: null, tags: [] as any, view_count: 0,
+    created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
   },
   {
     id: 'demo-3', title: '社区常见野花图鉴', category: 'botany', type: 'text',
-    content_url: null, duration_seconds: null,
+    content_url: null, duration: null,
     description: '认识展览路街道周边常见的野生花卉，从迎春花到蒲公英，用图文并茂的方式介绍它们的特征和习性。',
+    source: null, tags: [] as any, view_count: 0,
+    created_at: new Date().toISOString(), updated_at: new Date().toISOString(),
   },
 ]
 
@@ -65,7 +71,7 @@ export default function ResourceDetailClient({ id }: { id: string }) {
     if (!error && data) {
       setResource(data)
       // 加载同分类资源
-      const { data: related } = await getResources(data.category)
+      const { data: related } = await getResources(data.category) as unknown as { data: Resource[] | null; error: any }
       if (related) {
         setRelatedResources(related.filter(r => r.id !== data.id).slice(0, 3))
       }
@@ -86,12 +92,13 @@ export default function ResourceDetailClient({ id }: { id: string }) {
     // 记录行为
     await recordActivity({
       user_id: user.id,
-      action_type: resource.type === 'audio' ? 'play_audio' : 'search',
-      duration_seconds: resource.duration_seconds,
-    })
+      action: resource.type === 'audio' ? 'play_audio' : 'search',
+      resource_id: resource.id,
+      duration: resource.duration,
+    } as any)
     // 模拟播放完成
-    if (resource.duration_seconds) {
-      setTimeout(() => setPlaying(false), Math.min(resource.duration_seconds * 1000, 5000))
+    if (resource.duration) {
+      setTimeout(() => setPlaying(false), Math.min(resource.duration * 1000, 5000))
     }
   }
 
@@ -106,8 +113,8 @@ export default function ResourceDetailClient({ id }: { id: string }) {
 
   const handleLike = () => setLiked(!liked)
 
-  const typeConfig = resource ? (typeIcons[resource.type] ?? typeIcons.text) : typeIcons.text
-  const categoryConfig = resource ? (RESOURCE_CATEGORIES as Record<string, { label: string; icon: string }>)[resource.category] : null
+  const typeConfig = resource ? (typeIcons[resource.type ?? 'text'] ?? typeIcons.text) : typeIcons.text
+  const categoryConfig = resource ? (RESOURCE_CATEGORIES as Record<string, { label: string; icon: string }>)[resource.category ?? ''] : null
 
   if (loading) {
     return (
@@ -164,10 +171,10 @@ export default function ResourceDetailClient({ id }: { id: string }) {
 
           {/* 元信息 */}
           <div className="mt-3 flex items-center gap-4 text-sm text-gray-400">
-            {resource.duration_seconds && (
+            {resource.duration && (
               <span className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
-                {Math.ceil(resource.duration_seconds / 60)} 分钟
+                {Math.ceil(resource.duration / 60)} 分钟
               </span>
             )}
             {resource.content_url && (
@@ -234,8 +241,8 @@ export default function ResourceDetailClient({ id }: { id: string }) {
             <h3 className="mb-3 text-sm font-semibold text-gray-700">相关推荐</h3>
             <div className="space-y-2">
               {relatedResources.map(r => {
-                const rType = typeIcons[r.type] ?? typeIcons.text
-                const rCat = (RESOURCE_CATEGORIES as Record<string, { label: string; icon: string }>)[r.category]
+                const rType = typeIcons[r.type ?? 'text'] ?? typeIcons.text
+                const rCat = (RESOURCE_CATEGORIES as Record<string, { label: string; icon: string }>)[r.category ?? '']
                 return (
                   <a
                     key={r.id}
@@ -249,7 +256,7 @@ export default function ResourceDetailClient({ id }: { id: string }) {
                       <p className="text-sm font-medium text-gray-800 truncate">{r.title}</p>
                       <div className="mt-0.5 flex items-center gap-2 text-xs text-gray-400">
                         {rCat && <span>{rCat.icon} {rCat.label}</span>}
-                        {r.duration_seconds && <span>{Math.ceil(r.duration_seconds / 60)}分钟</span>}
+                        {r.duration && <span>{Math.ceil(r.duration / 60)}分钟</span>}
                       </div>
                     </div>
                   </a>

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { recordActivity, getUserActivities, getActivityStats, upsertHotWord } from '@/lib/supabase/queries'
 import { apiSuccess, apiError, getAuthToken } from '@/lib/utils/api'
 import { createUserServerClient } from '@/lib/supabase/client'
+import { checkRateLimit, getRateLimitIdentifier } from '@/lib/utils/rate-limit'
 
 /**
  * GET /api/activity
@@ -26,6 +27,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(apiSuccess(data))
   } catch (err) {
+    console.error('[API Route Error]', '/api/activity', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }
@@ -42,6 +44,15 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
+    const rateLimitResult = checkRateLimit({
+      identifier: getRateLimitIdentifier(request, '/api/activity'),
+      maxRequests: 30,
+      windowSeconds: 60
+    })
+    if (rateLimitResult.limited) {
+      return NextResponse.json({ success: false, error: '请求过于频繁，请稍后再试' }, { status: 429 })
+    }
+
     const token = getAuthToken(request)
     if (!token) return NextResponse.json(apiError('未登录'), { status: 401 })
 
@@ -50,16 +61,25 @@ export async function POST(request: NextRequest) {
     if (authError || !user) return NextResponse.json(apiError('认证失败'), { status: 401 })
 
     const body = await request.json()
-    const { action_type, search_keyword, duration_seconds } = body
+    const { action_type, search_keyword, duration_seconds, resource_id } = body as { action_type?: string; search_keyword?: string; duration_seconds?: number; resource_id?: string }
 
     if (!action_type) return NextResponse.json(apiError('缺少参数 action_type'), { status: 400 })
+
+    const VALID_ACTIONS = ['play_audio', 'scan_ar', 'search', 'feedback', 'join_activity', 'view_resource']
+    if (action_type && !VALID_ACTIONS.includes(action_type)) {
+      return NextResponse.json(apiError('无效的行为类型'), { status: 400 })
+    }
+    if (search_keyword && search_keyword.length > 200) {
+      return NextResponse.json(apiError('搜索关键词过长'), { status: 400 })
+    }
 
     // 记录行为
     const { error } = await recordActivity({
       user_id: user.id,
-      action_type,
-      search_keyword: search_keyword ?? null,
-      duration_seconds: duration_seconds ?? null,
+      action: action_type as 'play_audio' | 'scan_ar' | 'search' | 'feedback' | 'join_activity' | 'view_resource',
+      keyword: search_keyword ?? null,
+      duration: duration_seconds ?? null,
+      resource_id: resource_id ?? null,
     })
     if (error) return NextResponse.json(apiError(error.message), { status: 500 })
 
@@ -71,6 +91,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(apiSuccess({ message: '记录成功' }), { status: 201 })
   } catch (err) {
+    console.error('[API Route Error]', '/api/activity', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

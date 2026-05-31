@@ -16,7 +16,7 @@ export function HourRecord({ records }: HourRecordProps) {
     )
   }
 
-  const totalHours = records.reduce((sum, r) => sum + (r.hours || 0), 0)
+  const totalHours = records.reduce((sum, r) => sum + (r.service_hours || 0), 0)
 
   return (
     <div>
@@ -37,7 +37,7 @@ export function HourRecord({ records }: HourRecordProps) {
                 <p className="text-gray-900">志愿服务</p>
                 <p className="text-xs text-gray-400 mt-1">{formatDate(record.created_at)}</p>
               </div>
-              <span className="font-medium text-purple-500">{record.hours} 小时</span>
+              <span className="font-medium text-purple-500">{record.service_hours} 小时</span>
             </div>
           </div>
         ))}

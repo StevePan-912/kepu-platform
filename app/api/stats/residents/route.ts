@@ -16,7 +16,7 @@ import { createUserServerClient } from '@/lib/supabase/client'
  */
 export async function GET(request: NextRequest) {
   try {
-    const token = await getAuthToken(request)
+    const token = getAuthToken(request)
     if (!token) return NextResponse.json(apiError('未登录'), { status: 401 })
 
     const userClient = createUserServerClient(token)
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     // 验证管理员权限
     const serviceClient = createServerClient()
     const { data: userRecord } = await serviceClient
-      .from('users').select('role').eq('id', user.id).single()
+      .from('users').select('role').eq('id', user.id).single() as { data: { role: string } | null; error: any }
     if (userRecord?.role !== 'admin') {
       return NextResponse.json(apiError('权限不足'), { status: 403 })
     }
@@ -55,6 +55,7 @@ export async function GET(request: NextRequest) {
       leaderboard: summariesRes.data ?? [],
     }))
   } catch (err) {
+    console.error('[API Route Error]', '/api/stats/residents', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

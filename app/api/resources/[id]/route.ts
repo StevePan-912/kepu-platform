@@ -20,24 +20,25 @@ export async function GET(request: NextRequest, { params }: Params) {
       return NextResponse.json(apiError(error.message), { status: 500 })
     }
 
-    // 异步记录浏览行为（不阻塞响应）
+    // 记录浏览行为
     const token = getAuthToken(request)
     if (token) {
       const userClient = createUserServerClient(token)
-      userClient.auth.getUser().then(({ data: { user } }) => {
-        if (user) {
-          recordActivity({
-            user_id: user.id,
-            action_type: 'view_resource',
-            search_keyword: null,
-            duration_seconds: null,
-          })
-        }
-      })
+      const { data: { user } } = await userClient.auth.getUser()
+      if (user) {
+        await recordActivity({
+          user_id: user.id,
+          action: 'view_resource',
+          keyword: null,
+          duration: null,
+          resource_id: id,
+        })
+      }
     }
 
     return NextResponse.json(apiSuccess(data))
   } catch (err) {
+    console.error('[API Route Error]', '/api/resources/[id]', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

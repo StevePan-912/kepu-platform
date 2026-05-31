@@ -64,7 +64,7 @@ export default defineConfig({
   ],
   
   // 开发服务器（E2E 启动前自动运行）
-  webServer: process.env.CI ? undefined : {
+  webServer: {
     command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: true,

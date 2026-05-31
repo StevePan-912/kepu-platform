@@ -9,8 +9,8 @@ interface MapFilterProps {
   onFilterChange: (filtered: Device[]) => void
 }
 
-const ALL_TYPES = Object.keys(DEVICE_TYPES) as Device['type'][]
-const ALL_STATUSES = Object.keys(DEVICE_STATUS) as Device['status'][]
+const ALL_TYPES = Object.keys(DEVICE_TYPES) as string[]
+const ALL_STATUSES = Object.keys(DEVICE_STATUS) as string[]
 
 const TYPE_EMOJI: Record<string, string> = {
   audio_station: '🔊',
@@ -26,7 +26,7 @@ export default function MapFilter({ devices, onFilterChange }: MapFilterProps) {
 
   function applyFilter(types: Set<string>, statuses: Set<string>) {
     const filtered = devices.filter(
-      (d) => types.has(d.type) && statuses.has(d.status)
+      (d) => types.has(d.type ?? '') && statuses.has(d.status)
     )
     onFilterChange(filtered)
   }
@@ -76,7 +76,7 @@ export default function MapFilter({ devices, onFilterChange }: MapFilterProps) {
                     onChange={() => toggleType(type)}
                     className="rounded accent-green-600"
                   />
-                  <span className="text-sm">{TYPE_EMOJI[type]} {DEVICE_TYPES[type].label}</span>
+                  <span className="text-sm">{TYPE_EMOJI[type]} {(DEVICE_TYPES as Record<string, any>)[type].label}</span>
                 </label>
               ))}
             </div>
@@ -93,7 +93,7 @@ export default function MapFilter({ devices, onFilterChange }: MapFilterProps) {
                     onChange={() => toggleStatus(status)}
                     className="rounded accent-green-600"
                   />
-                  <span className="text-sm">{DEVICE_STATUS[status].label}</span>
+                  <span className="text-sm">{(DEVICE_STATUS as Record<string, any>)[status].label}</span>
                 </label>
               ))}
             </div>

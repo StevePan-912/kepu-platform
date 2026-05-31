@@ -19,7 +19,7 @@ export default function ExchangeModal({ product, userPoints, userId, onClose, on
   const [step, setStep] = useState<Step>('confirm')
   const [errorMsg, setErrorMsg] = useState('')
 
-  const cost = (product as Record<string, unknown>).points_required as number ?? product.points_cost
+  const cost = product.points_required
   const remaining = userPoints - cost
   const imageUrl = (product as Record<string, unknown>).image_url as string | undefined
 

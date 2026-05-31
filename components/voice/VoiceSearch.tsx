@@ -70,9 +70,9 @@ export function VoiceSearch({ onSearch, isListening, setIsListening }: VoiceSear
       if (user) {
         recordActivity({
           user_id: user.id,
-          action_type: 'search',
-          search_keyword: inputValue.trim()
-        })
+          action: 'search',
+          keyword: inputValue.trim(),
+        } as any)
       }
     }
   }

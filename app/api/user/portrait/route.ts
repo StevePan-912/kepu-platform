@@ -13,7 +13,7 @@ import { createUserServerClient } from '@/lib/supabase/client'
  */
 export async function GET(request: NextRequest) {
   try {
-    const token = await getAuthToken(request)
+    const token = getAuthToken(request)
     if (!token) return NextResponse.json(apiError('未登录'), { status: 401 })
 
     const userClient = createUserServerClient(token)
@@ -39,6 +39,7 @@ export async function GET(request: NextRequest) {
       preference: prefRes?.data ?? null,
     }))
   } catch (err) {
+    console.error('[API Route Error]', '/api/user/portrait', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

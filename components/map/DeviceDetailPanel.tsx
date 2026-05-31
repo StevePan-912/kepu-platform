@@ -31,10 +31,10 @@ function getBatteryColor(level: number) {
 export default function DeviceDetailPanel({ device, onClose, onNavigate }: DeviceDetailPanelProps) {
   if (!device) return null
 
-  const typeInfo = DEVICE_TYPES[device.type]
-  const statusInfo = DEVICE_STATUS[device.status]
-  const statusStyle = STATUS_COLORS[device.status] ?? 'text-gray-600 bg-gray-50'
-  const lastActive = new Date(device.last_active)
+  const typeInfo = (DEVICE_TYPES as Record<string, any>)[device.type ?? '']
+  const statusInfo = (DEVICE_STATUS as Record<string, any>)[device.status]
+  const statusStyle = (STATUS_COLORS as Record<string, string>)[device.status] ?? 'text-gray-600 bg-gray-50'
+  const lastActive = new Date(device.last_active_at ?? '')
   const lastActiveStr = lastActive.toLocaleString('zh-CN', {
     month: 'short',
     day: 'numeric',
@@ -58,7 +58,7 @@ export default function DeviceDetailPanel({ device, onClose, onNavigate }: Devic
       {/* 设备信息头 */}
       <div className="flex items-start gap-3 mb-4">
         <div className="w-12 h-12 rounded-2xl bg-green-50 flex items-center justify-center text-2xl">
-          {TYPE_EMOJI[device.type]}
+          {(TYPE_EMOJI as Record<string, string>)[device.type ?? '']}
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="font-bold text-gray-900 text-lg leading-tight">{device.name}</h3>
@@ -71,10 +71,10 @@ export default function DeviceDetailPanel({ device, onClose, onNavigate }: Devic
 
       {/* 详细信息 */}
       <div className="space-y-3 bg-gray-50 rounded-2xl p-4 mb-4">
-        {device.location && (
+        {device.address && (
           <div className="flex items-center gap-2 text-sm">
             <span className="text-gray-400 w-16 shrink-0">位置</span>
-            <span className="text-gray-700">{device.location}</span>
+            <span className="text-gray-700">{device.address}</span>
           </div>
         )}
         <div className="flex items-center gap-2 text-sm">
@@ -86,18 +86,18 @@ export default function DeviceDetailPanel({ device, onClose, onNavigate }: Devic
           <div className="flex items-center gap-2 flex-1">
             <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full transition-all ${getBatteryColor(device.battery_level)}`}
+                className={`h-full rounded-full transition-all ${getBatteryColor(device.battery_level ?? 0)}`}
                 style={{ width: `${device.battery_level}%` }}
               />
             </div>
             <span className="text-gray-700 text-xs w-8">{device.battery_level}%</span>
           </div>
         </div>
-        {device.lat != null && device.lng != null && (
+        {device.latitude != null && device.longitude != null && (
           <div className="flex items-center gap-2 text-sm">
             <span className="text-gray-400 w-16 shrink-0">坐标</span>
             <span className="text-gray-700 text-xs font-mono">
-              {device.lat.toFixed(5)}, {device.lng.toFixed(5)}
+              {device.latitude.toFixed(5)}, {device.longitude.toFixed(5)}
             </span>
           </div>
         )}

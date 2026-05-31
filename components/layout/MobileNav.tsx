@@ -1,5 +1,3 @@
-import { cn } from '@/lib/utils/cn'
-
 export function MobileNav() {
   const navItems = [
     { href: '/', label: '首页', icon: '🏠' },

@@ -24,7 +24,7 @@ export function apiError(error: string, status = 400) {
 }
 
 // 从 Request 中获取 Supabase session token
-export async function getAuthToken(request: Request): Promise<string | null> {
+export function getAuthToken(request: Request): string | null {
   const authHeader = request.headers.get('Authorization')
   if (authHeader?.startsWith('Bearer ')) {
     return authHeader.slice(7)

@@ -129,7 +129,7 @@ export function DeviceStatusList() {
   const filteredDevices = devices.filter((device) => {
     const matchesSearch =
       device.name?.toLowerCase().includes(search.toLowerCase()) ||
-      device.location?.toLowerCase().includes(search.toLowerCase())
+      device.address?.toLowerCase().includes(search.toLowerCase())
     const matchesType = typeFilter === 'all' || device.type === typeFilter
     const matchesStatus = statusFilter === 'all' || device.status === statusFilter
     return matchesSearch && matchesType && matchesStatus
@@ -264,7 +264,7 @@ export function DeviceStatusList() {
                     <TableCell>
                       <div className="flex items-center gap-1 text-gray-500">
                         <MapPin className="w-3 h-3" />
-                        <span>{device.location ?? '—'}</span>
+                        <span>{device.address ?? '—'}</span>
                       </div>
                     </TableCell>
                     <TableCell>

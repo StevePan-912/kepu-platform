@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Edge Function: auto-points
  * 数据库 Webhook 触发：当 user_activities 插入新记录时自动奖励积分

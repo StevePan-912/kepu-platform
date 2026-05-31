@@ -12,7 +12,10 @@ import { apiSuccess, apiError } from '@/lib/utils/api'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const period = (searchParams.get('period') ?? 'weekly') as 'daily' | 'weekly'
+    const period = searchParams.get('period') ?? 'weekly'
+    if (!['daily', 'weekly'].includes(period)) {
+      return NextResponse.json(apiError('无效的period参数'), { status: 400 })
+    }
     const limit = Math.min(parseInt(searchParams.get('limit') ?? '30', 10), 50)
 
     const { data, error } = await getHotWords(period, limit)
@@ -20,6 +23,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(apiSuccess(data))
   } catch (err) {
+    console.error('[API Route Error]', '/api/hot-words', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

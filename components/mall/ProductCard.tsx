@@ -20,8 +20,7 @@ const categoryStyle: Record<string, { icon: string; gradient: string; badge: str
 }
 
 export default function ProductCard({ product, userPoints, onExchange }: ProductCardProps) {
-  // queries.ts 中用 points_required，但 types.ts 中是 points_cost，兼容两者
-  const cost = (product as Record<string, unknown>).points_required as number ?? product.points_cost
+  const cost = product.points_required
   const canExchange = userPoints >= cost && product.stock > 0
   const category = (product as Record<string, unknown>).category as string ?? 'default'
   const imageUrl = (product as Record<string, unknown>).image_url as string | undefined

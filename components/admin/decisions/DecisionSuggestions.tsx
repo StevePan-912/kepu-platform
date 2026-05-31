@@ -137,8 +137,8 @@ export function DecisionSuggestions() {
                         </Badge>
                       </TableCell>
                       <TableCell className="max-w-md">
-                        <div className="truncate" title={s.suggestion_text}>
-                          {s.suggestion_text}
+                        <div className="truncate" title={s.suggestion}>
+                          {s.suggestion}
                         </div>
                       </TableCell>
                       <TableCell>

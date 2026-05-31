@@ -22,14 +22,14 @@ const CATEGORIES = [
 
 // 兜底模拟数据（Supabase 未连接时展示）
 const DEMO_PRODUCTS: Product[] = [
-  { id: '1', name: '科普百科全书（儿童版）', points_cost: 200, stock: 10 } as Product,
-  { id: '2', name: '定制科学实验套装', points_cost: 350, stock: 5 } as Product,
-  { id: '3', name: '荣誉探索者徽章', points_cost: 100, stock: 20 } as Product,
-  { id: '4', name: '科普主题笔记本', points_cost: 80, stock: 15 } as Product,
-  { id: '5', name: '免费参观科技馆券', points_cost: 150, stock: 8 } as Product,
-  { id: '6', name: '3D打印纪念品', points_cost: 500, stock: 3 } as Product,
-  { id: '7', name: '环保购物袋（印制科普图案）', points_cost: 60, stock: 30 } as Product,
-  { id: '8', name: '儿童智力拼图', points_cost: 120, stock: 12 } as Product,
+  { id: '1', name: '科普百科全书（儿童版）', points_required: 200, stock: 10 } as Product,
+  { id: '2', name: '定制科学实验套装', points_required: 350, stock: 5 } as Product,
+  { id: '3', name: '荣誉探索者徽章', points_required: 100, stock: 20 } as Product,
+  { id: '4', name: '科普主题笔记本', points_required: 80, stock: 15 } as Product,
+  { id: '5', name: '免费参观科技馆券', points_required: 150, stock: 8 } as Product,
+  { id: '6', name: '3D打印纪念品', points_required: 500, stock: 3 } as Product,
+  { id: '7', name: '环保购物袋（印制科普图案）', points_required: 60, stock: 30 } as Product,
+  { id: '8', name: '儿童智力拼图', points_required: 120, stock: 12 } as Product,
 ]
 
 export default function ProductGrid({ userPoints, onExchange }: ProductGridProps) {

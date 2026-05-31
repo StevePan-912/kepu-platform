@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Edge Function: daily-stats
  * 定时任务：每日聚合统计数据，写入 stats_daily 表

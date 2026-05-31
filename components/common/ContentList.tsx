@@ -39,7 +39,7 @@ export function ContentList({ resources, loading }: ContentListProps) {
   return (
     <div className="space-y-3">
       {resources.map((resource) => {
-        const categoryConfig = RESOURCE_CATEGORIES[resource.category]
+        const categoryConfig = (RESOURCE_CATEGORIES as Record<string, { label: string; icon: string; color: string }>)[resource.category ?? '']
 
         return (
           <Link
@@ -49,17 +49,17 @@ export function ContentList({ resources, loading }: ContentListProps) {
           >
             <div className="flex items-start gap-3">
               <div className={`w-10 h-10 ${categoryConfig.color} rounded-lg flex items-center justify-center`}>
-                {getTypeIcon(resource.type)}
+                {getTypeIcon(resource.type ?? 'text')}
               </div>
 
               <div className="flex-1 min-w-0">
                 <h3 className="font-medium text-gray-900 truncate">{resource.title}</h3>
                 <p className="text-sm text-gray-500 mt-1 truncate">{resource.description}</p>
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-xs text-gray-400">{resource.source_provider}</span>
-                  {resource.duration_seconds && (
+                  <span className="text-xs text-gray-400">{resource.source}</span>
+                  {resource.duration && (
                     <span className="text-xs text-gray-400">
-                      {Math.floor(resource.duration_seconds / 60)}分钟
+                      {Math.floor(resource.duration / 60)}分钟
                     </span>
                   )}
                 </div>

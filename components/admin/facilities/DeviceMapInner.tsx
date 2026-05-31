@@ -57,9 +57,9 @@ const deviceTypeLabels: Record<string, string> = {
 function FitBounds({ devices }: { devices: any[] }) {
   const map = useMap()
   useEffect(() => {
-    const validDevices = devices.filter((d) => d.lat && d.lng)
+    const validDevices = devices.filter((d) => d.latitude && d.longitude)
     if (validDevices.length > 0) {
-      const bounds = L.latLngBounds(validDevices.map((d) => [d.lat, d.lng]))
+      const bounds = L.latLngBounds(validDevices.map((d) => [d.latitude, d.longitude]))
       map.fitBounds(bounds, { padding: [40, 40] })
     }
   }, [devices, map])
@@ -89,7 +89,7 @@ export default function DeviceMapInner() {
   }, [])
 
   // 有坐标的设备
-  const mappableDevices = devices.filter((d) => d.lat && d.lng)
+  const mappableDevices = devices.filter((d) => d.latitude && d.longitude)
 
   // 展览路街道附近作为默认中心（北京）
   const defaultCenter: [number, number] = [39.932, 116.352]
@@ -178,7 +178,7 @@ export default function DeviceMapInner() {
               {mappableDevices.map((device) => (
                 <Marker
                   key={device.id}
-                  position={[device.lat, device.lng]}
+                  position={[device.latitude, device.longitude]}
                   icon={createColorIcon(device.status)}
                 >
                   <Popup>
@@ -189,7 +189,7 @@ export default function DeviceMapInner() {
                       </div>
                       <div className="flex items-center gap-1 text-xs text-gray-500 mb-2">
                         <MapPin className="w-3 h-3" />
-                        {device.location ?? '未知位置'}
+                        {device.address ?? '未知位置'}
                       </div>
                       <div className="flex items-center justify-between">
                         <span

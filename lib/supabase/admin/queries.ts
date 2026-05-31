@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { supabase } from '@/lib/supabase/client'
 import type {
   AdminDeviceStats,
@@ -24,7 +23,7 @@ export async function getDeviceStats(): Promise<{ data: AdminDeviceStats | null;
   try {
     const { data, count, error } = await supabase
       .from('devices')
-      .select('status')
+      .select('status') as unknown as { data: { status: string }[] | null; count: number | null; error: any }
 
     if (error) throw error
 
@@ -63,7 +62,7 @@ export async function getDevices(
 
     let query = supabase
       .from('devices')
-      .select('*', { count: 'exact' })
+      .select('*', { count: 'exact' }) as any
 
     // 排序
     query = query.order(sortBy, { ascending: sortOrder === 'asc' })
@@ -101,7 +100,7 @@ export async function getDeviceById(
       .from('devices')
       .select('*')
       .eq('id', deviceId)
-      .single()
+      .single() as unknown as { data: any; error: any }
 
     if (error) throw error
     return { data, error: null }
@@ -120,7 +119,7 @@ export async function getUserStats(): Promise<{ data: AdminUserStats | null; err
     // 获取用户总数和积分平均
     const { data: users, error: usersError } = await supabase
       .from('users')
-      .select('points, honor_level, created_at')
+      .select('points, honor_level, created_at') as unknown as { data: { points: number; honor_level: string | null; created_at: string }[] | null; error: any }
 
     if (usersError) throw usersError
 
@@ -170,8 +169,8 @@ export async function getActivityStats(
 
     const { data, error } = await supabase
       .from('user_activities')
-      .select('action_type, created_at')
-      .gte('created_at', startDate.toISOString())
+      .select('action, created_at')
+      .gte('created_at', startDate.toISOString()) as unknown as { data: { action: string; created_at: string }[] | null; error: any }
 
     if (error) throw error
 
@@ -193,7 +192,7 @@ export async function getActivityStats(
       }
 
       const stats = statsMap.get(date)!
-      switch (activity.action_type) {
+      switch (activity.action) {
         case 'play_audio':
           stats.playAudio++
           break
@@ -206,7 +205,7 @@ export async function getActivityStats(
         case 'feedback':
           stats.feedback++
           break
-        case 'activity_join':
+        case 'join_activity':
           stats.activityJoin++
           break
       }
@@ -239,7 +238,7 @@ export async function getDecisionSuggestions(
 
     let query = supabase
       .from('decision_suggestions')
-      .select('*', { count: 'exact' })
+      .select('*', { count: 'exact' }) as any
 
     // 类型筛选
     if (type && type !== 'all') {
@@ -280,8 +279,8 @@ export async function updateSuggestionStatus(
   isActive: boolean
 ): Promise<{ data: any | null; error: string | null }> {
   try {
-    const { data, error } = await supabase
-      .from('decision_suggestions')
+    const { data, error } = await (supabase
+      .from('decision_suggestions') as any)
       .update({ is_active: isActive })
       .eq('id', suggestionId)
       .select()
@@ -303,7 +302,7 @@ export async function getAlertStats(): Promise<{ data: { pending: number; acknow
   try {
     const { data, error } = await supabase
       .from('device_alerts')
-      .select('status')
+      .select('status') as unknown as { data: { status: string }[] | null; error: any }
 
     if (error) throw error
 
@@ -342,7 +341,7 @@ export async function getAlerts(
         created_at,
         resolved_at,
         devices:devices ( name )
-      `, { count: 'exact' })
+      `, { count: 'exact' }) as any
 
     if (alertType && alertType !== 'all') {
       query = query.eq('alert_type', alertType)
@@ -397,8 +396,8 @@ export async function updateAlertStatus(
       updatePayload.resolved_at = new Date().toISOString()
     }
 
-    const { data, error } = await supabase
-      .from('device_alerts')
+    const { data, error } = await (supabase
+      .from('device_alerts') as any)
       .update(updatePayload)
       .eq('id', alertId)
       .select()
@@ -432,14 +431,14 @@ export async function getResourceRanking(
           type
         )
       `)
-      .not('resource_id', 'is', null)
+      .not('resource_id', 'is', null) as unknown as { data: any[] | null; error: any }
 
     if (error) throw error
 
     // 统计每个资源的访问次数
     const countMap = new Map<string, { count: number; resource: any }>()
 
-    data?.forEach((activity) => {
+    data?.forEach((activity: any) => {
       if (activity.resource_id && activity.resources) {
         const current = countMap.get(activity.resource_id) || { count: 0, resource: activity.resources }
         current.count++
@@ -468,7 +467,7 @@ export async function getResourceStats(): Promise<{ data: AdminResourceStats | n
   try {
     const { data, error } = await supabase
       .from('resources')
-      .select('category, type')
+      .select('category, type') as unknown as { data: { category: string | null; type: string | null }[] | null; error: any }
 
     if (error) throw error
 
@@ -512,7 +511,7 @@ export async function getUserGrowthStats(
       .from('users')
       .select('created_at')
       .gte('created_at', startDate.toISOString())
-      .order('created_at', { ascending: true })
+      .order('created_at', { ascending: true }) as unknown as { data: { created_at: string }[] | null; error: any }
 
     if (error) throw error
 
@@ -548,7 +547,7 @@ export async function getCategoryDistribution(): Promise<{ data: CategoryDistrib
   try {
     const { data, error } = await supabase
       .from('resources')
-      .select('category')
+      .select('category') as unknown as { data: { category: string | null }[] | null; error: any }
 
     if (error) throw error
 
@@ -583,8 +582,8 @@ export async function createDecisionSuggestion(
   suggestion: Omit<AdminDecisionSuggestion, 'id' | 'created_at'>
 ): Promise<{ data: any | null; error: string | null }> {
   try {
-    const { data, error } = await supabase
-      .from('decision_suggestions')
+    const { data, error } = await (supabase
+      .from('decision_suggestions') as any)
       .insert([suggestion])
       .select()
       .single()
@@ -609,9 +608,9 @@ export async function getHotAreas(
       .from('user_activities')
       .select(`
         device_id,
-        devices:devices ( name, location )
+        devices:devices ( name, address )
       `)
-      .not('device_id', 'is', null)
+      .not('device_id', 'is', null) as unknown as { data: any[] | null; error: any }
 
     if (error) throw error
 
@@ -619,7 +618,7 @@ export async function getHotAreas(
 
     data?.forEach((activity: any) => {
       if (activity.device_id && activity.devices) {
-        const location = activity.devices.location || activity.devices.name || activity.device_id
+        const location = activity.devices.address || activity.devices.name || activity.device_id
         const existing = areaMap.get(location) || { activityCount: 0, deviceIds: new Set() }
         existing.activityCount++
         existing.deviceIds.add(activity.device_id)
@@ -660,7 +659,7 @@ export async function getUserPreferences(
         resources ( category )
       `)
       .gte('created_at', startDate.toISOString())
-      .not('resource_id', 'is', null)
+      .not('resource_id', 'is', null) as unknown as { data: any[] | null; error: any }
 
     if (error) throw error
 

@@ -200,7 +200,7 @@ export async function listFiles(
         data?.map((f) => ({
           name: f.name,
           size: f.metadata?.size ?? 0,
-          created_at: f.created_at,
+          created_at: f.created_at ?? '',
         })) ?? [],
       error: null,
     }

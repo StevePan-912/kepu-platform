@@ -23,8 +23,8 @@ const TYPE_EMOJI: Record<string, string> = {
 }
 
 function createDeviceIcon(type: Device['type'], status: Device['status']): L.DivIcon {
-  const color = STATUS_COLORS[status] ?? '#6b7280'
-  const emoji = TYPE_EMOJI[type] ?? '📍'
+  const color = (STATUS_COLORS as Record<string, string>)[status] ?? '#6b7280'
+  const emoji = (TYPE_EMOJI as Record<string, string>)[type ?? ''] ?? '📍'
   return L.divIcon({
     className: '',
     html: `
@@ -53,10 +53,10 @@ export default function DeviceMarker({ device }: DeviceMarkerProps) {
   const router = useRouter()
   const setCurrentDeviceId = useAppStore((s) => s.setCurrentDeviceId)
 
-  if (device.lat == null || device.lng == null) return null
+  if (device.latitude == null || device.longitude == null) return null
 
-  const typeInfo = DEVICE_TYPES[device.type]
-  const statusInfo = DEVICE_STATUS[device.status]
+  const typeInfo = (DEVICE_TYPES as Record<string, any>)[device.type ?? '']
+  const statusInfo = (DEVICE_STATUS as Record<string, any>)[device.status]
   const icon = createDeviceIcon(device.type, device.status)
 
   function handleViewDetail() {
@@ -65,11 +65,11 @@ export default function DeviceMarker({ device }: DeviceMarkerProps) {
   }
 
   return (
-    <Marker position={[device.lat, device.lng]} icon={icon}>
+    <Marker position={[device.latitude, device.longitude]} icon={icon}>
       <Popup minWidth={200} maxWidth={260}>
         <div className="p-1">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-xl">{TYPE_EMOJI[device.type]}</span>
+            <span className="text-xl">{(TYPE_EMOJI as Record<string, string>)[device.type ?? '']}</span>
             <div>
               <p className="font-semibold text-sm text-gray-900">{device.name}</p>
               <p className="text-xs text-gray-500">{typeInfo?.label}</p>
@@ -77,10 +77,10 @@ export default function DeviceMarker({ device }: DeviceMarkerProps) {
           </div>
 
           <div className="space-y-1 text-xs text-gray-600">
-            {device.location && (
+            {device.address && (
               <div className="flex items-center gap-1">
                 <span>📍</span>
-                <span>{device.location}</span>
+                <span>{device.address}</span>
               </div>
             )}
             <div className="flex items-center gap-2">

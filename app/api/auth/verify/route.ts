@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { verifyOtp } from '@/lib/supabase/auth'
 import { upsertUser } from '@/lib/supabase/queries'
 import { apiSuccess, apiError } from '@/lib/utils/api'
+import { checkRateLimit, getRateLimitIdentifier } from '@/lib/utils/rate-limit'
 
 /**
  * POST /api/auth/verify
@@ -10,6 +11,14 @@ import { apiSuccess, apiError } from '@/lib/utils/api'
  */
 export async function POST(request: NextRequest) {
   try {
+    const rateLimitResult = checkRateLimit({
+      identifier: getRateLimitIdentifier(request, '/api/auth/verify'),
+      maxRequests: 10,
+      windowSeconds: 60
+    })
+    if (rateLimitResult.limited) {
+      return NextResponse.json({ success: false, error: '请求过于频繁，请稍后再试' }, { status: 429 })
+    }
     const body = await request.json()
     const { phone, token } = body
     if (!phone || !token) {
@@ -40,6 +49,7 @@ export async function POST(request: NextRequest) {
       },
     }))
   } catch (err) {
+    console.error('[API Route Error]', '/api/auth/verify', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

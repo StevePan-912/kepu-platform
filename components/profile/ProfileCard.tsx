@@ -41,7 +41,7 @@ export function ProfileCard({ user, onLogout }: ProfileCardProps) {
         {/* 荣誉等级 */}
         <div className="mt-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            {user.honor_level && <PointsBadge level={user.honor_level} />}
+            {user.honor_level && <PointsBadge level={user.honor_level as 'explorer' | 'communicator' | 'leader'} />}
           </div>
           <div className="text-right">
             <p className="text-2xl font-bold">{user.points}</p>

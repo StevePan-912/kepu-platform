@@ -1,7 +1,5 @@
 'use client'
 
-export const dynamic = 'force-dynamic'
-
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
@@ -183,7 +181,7 @@ export default function DeviceDetailPage() {
                 {statusInfo.label}
               </Badge>
             </div>
-            <p className="text-sm text-gray-500 mt-1">{device.location ?? '—'}</p>
+            <p className="text-sm text-gray-500 mt-1">{device.address ?? '—'}</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm">
@@ -318,17 +316,17 @@ export default function DeviceDetailPage() {
             </div>
 
             {/* 位置信息 */}
-            {(device.location || device.lat || device.lng) && (
+            {(device.address || device.latitude || device.longitude) && (
               <div className="pt-4 mt-4 border-t">
                 <p className="text-sm text-gray-500 mb-2">地理位置</p>
                 <div className="flex items-center gap-2 mb-1">
                   <MapPin className="w-4 h-4 text-gray-400" />
-                  <span>{device.location ?? '未知位置'}</span>
+                  <span>{device.address ?? '未知位置'}</span>
                 </div>
-                {(device.lat || device.lng) && (
+                {(device.latitude || device.longitude) && (
                   <div className="flex items-center gap-4 text-sm text-gray-500 ml-6">
-                    {device.lat && <span>纬度: {device.lat}</span>}
-                    {device.lng && <span>经度: {device.lng}</span>}
+                    {device.latitude && <span>纬度: {device.latitude}</span>}
+                    {device.longitude && <span>经度: {device.longitude}</span>}
                   </div>
                 )}
               </div>

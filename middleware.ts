@@ -57,6 +57,23 @@ export function middleware(request: NextRequest) {
       loginUrl.searchParams.set('redirect', pathname)
       return NextResponse.redirect(loginUrl)
     }
+
+    // JWT 过期检查（解码 payload，验证 exp 字段）
+    const jwt = token || cookieToken
+    try {
+      const parts = jwt!.split('.')
+      if (parts.length === 3) {
+        const payload = JSON.parse(atob(parts[1]))
+        if (payload.exp && payload.exp * 1000 < Date.now()) {
+          const loginUrl = new URL('/', request.url)
+          loginUrl.searchParams.set('redirect', pathname)
+          loginUrl.searchParams.set('reason', 'token_expired')
+          return NextResponse.redirect(loginUrl)
+        }
+      }
+    } catch {
+      // 解码失败时不阻止访问，让后续服务端校验处理
+    }
   }
 
   // ============================================================

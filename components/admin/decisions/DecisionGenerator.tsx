@@ -31,7 +31,7 @@ export function DecisionGenerator({ onCreated }: { onCreated?: () => void }) {
 
     const { data, error } = await createDecisionSuggestion({
       type: type as any,
-      suggestion_text: suggestionText,
+      suggestion: suggestionText,
       priority,
       is_active: false,
       reason: `基于决策目标"${goal}"由 AI 生成`,

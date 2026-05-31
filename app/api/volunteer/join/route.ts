@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(apiSuccess(data))
   } catch (err) {
+    console.error('[API Route Error]', '/api/volunteer/join', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }
@@ -54,6 +55,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(apiSuccess({ message: '报名成功' }), { status: 201 })
   } catch (err) {
+    console.error('[API Route Error]', '/api/volunteer/join', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

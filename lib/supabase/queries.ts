@@ -16,7 +16,7 @@ export async function getResources(category?: string) {
 }
 
 export async function getResourceById(id: string) {
-  return supabase.from('resources').select('*').eq('id', id).single()
+  return supabase.from('resources').select('*').eq('id', id).single() as unknown as { data: any; error: any }
 }
 
 // ============================================================
@@ -31,14 +31,14 @@ export async function getDevices(status?: string) {
 }
 
 export async function getDeviceById(id: string) {
-  return supabase.from('devices').select('*').eq('id', id).single()
+  return supabase.from('devices').select('*').eq('id', id).single() as unknown as { data: any; error: any }
 }
 
 // ============================================================
 // 用户行为
 // ============================================================
 export async function recordActivity(activity: Partial<UserActivity>) {
-  return supabase.from('user_activities').insert(activity as UserActivity)
+  return (supabase.from('user_activities') as any).insert(activity as UserActivity)
 }
 
 export async function getUserActivities(userId: string, limit = 50) {
@@ -73,23 +73,38 @@ export async function getHotWords(period = 'weekly', limit = 30) {
 
 export async function upsertHotWord(word: string, period = 'daily') {
   const today = new Date().toISOString().split('T')[0]
-  return supabase
+  // Try to get existing record first
+  const { data: existing } = await supabase
     .from('hot_words')
-    .upsert(
-      { word, period, stat_date: today, count: 1 },
-      { onConflict: 'word,period,stat_date', ignoreDuplicates: false }
-    )
+    .select('id, count')
+    .eq('word', word)
+    .eq('period', period)
+    .eq('stat_date', today)
+    .single() as unknown as { data: any; error: any }
+
+  if (existing) {
+    // Increment existing count
+    return (supabase
+      .from('hot_words') as any)
+      .update({ count: existing.count + 1 })
+      .eq('id', existing.id)
+  } else {
+    // Insert new record
+    return (supabase
+      .from('hot_words') as any)
+      .insert({ word, period, stat_date: today, count: 1 })
+  }
 }
 
 // ============================================================
 // 用户信息
 // ============================================================
 export async function getUserById(id: string) {
-  return supabase.from('users').select('*').eq('id', id).single()
+  return supabase.from('users').select('*').eq('id', id).single() as unknown as { data: any; error: any }
 }
 
 export async function upsertUser(userData: Partial<User> & { id: string }) {
-  return supabase.from('users').upsert(userData, { onConflict: 'id' })
+  return (supabase.from('users') as any).upsert(userData, { onConflict: 'id' })
 }
 
 // ============================================================
@@ -102,14 +117,14 @@ export async function updateUserPoints(userId: string, pointsToAdd: number, reas
   const newPoints = user.points + pointsToAdd
   if (newPoints < 0) return { error: new Error('积分不足') }
 
-  const { error: updateError } = await supabase
-    .from('users')
+  const { error: updateError } = await (supabase
+    .from('users') as any)
     .update({ points: newPoints })
     .eq('id', userId)
 
   if (updateError) return { error: updateError }
 
-  const { error: recordError } = await supabase.from('point_records').insert({
+  const { error: recordError } = await (supabase.from('point_records') as any).insert({
     user_id: userId,
     points: pointsToAdd,
     reason,
@@ -140,7 +155,7 @@ export async function getProducts(category?: string) {
 
 export async function createExchange(userId: string, productId: string) {
   const { data: product, error: pErr } = await supabase
-    .from('products').select('*').eq('id', productId).single()
+    .from('products').select('*').eq('id', productId).single() as unknown as { data: any; error: any }
   if (pErr || !product) return { error: pErr || new Error('商品不存在') }
   if (product.stock <= 0) return { error: new Error('商品库存不足') }
 
@@ -151,18 +166,18 @@ export async function createExchange(userId: string, productId: string) {
   const pointsResult = await updateUserPoints(userId, -product.points_required, `兑换商品：${product.name}`)
   if (pointsResult.error) return { error: pointsResult.error }
 
-  const { error: stockErr } = await supabase
-    .from('products')
+  const { error: stockErr } = await (supabase
+    .from('products') as any)
     .update({ stock: product.stock - 1 })
     .eq('id', productId)
   if (stockErr) return { error: stockErr }
 
-  return supabase.from('exchanges').insert({
+  return (supabase.from('exchanges') as any).insert({
     user_id: userId,
     product_id: productId,
     points_spent: product.points_required,
     status: 'pending',
-  }).select().single()
+  }).select().single() as unknown as { data: any; error: any }
 }
 
 export async function getUserExchanges(userId: string) {
@@ -185,7 +200,7 @@ export async function getVolunteerTasks(status?: string) {
 }
 
 export async function joinVolunteerTask(userId: string, taskId: string) {
-  return supabase.from('volunteer_records').insert({
+  return (supabase.from('volunteer_records') as any).insert({
     user_id: userId,
     task_id: taskId,
     status: 'registered',

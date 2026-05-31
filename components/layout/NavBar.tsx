@@ -1,5 +1,3 @@
-import { cn } from '@/lib/utils/cn'
-
 export function NavBar() {
   return (
     <header className="sticky top-0 z-40 bg-white border-b">

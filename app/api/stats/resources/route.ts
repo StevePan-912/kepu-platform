@@ -21,12 +21,12 @@ export async function GET(request: NextRequest) {
     const serviceClient = createServerClient()
 
     const [resourcesRes, activitiesRes] = await Promise.all([
-      serviceClient.from('resources').select('id, title, category, type'),
+      serviceClient.from('resources').select('id, title, category, type') as unknown as { data: { id: string; title: string; category: string; type: string }[] | null; error: any },
       serviceClient
         .from('user_activities')
         .select('resource_id')
         .not('resource_id', 'is', null)
-        .gte('created_at', daysAgoISO(days)),
+        .gte('created_at', daysAgoISO(days)) as unknown as { data: { resource_id: string }[] | null; error: any },
     ])
 
     // 分类分布
@@ -60,6 +60,7 @@ export async function GET(request: NextRequest) {
       period_days: days,
     }))
   } catch (err) {
+    console.error('[API Route Error]', '/api/stats/resources', err)
     return NextResponse.json(apiError('服务器内部错误'), { status: 500 })
   }
 }

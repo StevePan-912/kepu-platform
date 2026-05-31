@@ -11,7 +11,8 @@ interface ResourceListProps {
 
 function highlightKeyword(text: string, keyword?: string) {
   if (!keyword) return text
-  const regex = new RegExp(`(${keyword})`, 'gi')
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const regex = new RegExp(`(${escaped})`, 'gi')
   const parts = text.split(regex)
   return parts.map((part, i) =>
     regex.test(part) ? (
@@ -50,7 +51,7 @@ export function ResourceList({ resources, keyword }: ResourceListProps) {
             video: '🎬',
             ar_model: '📱',
             text: '📖'
-          }[resource.type] || '📄'
+          }[resource.type ?? ''] || '📄'
 
           return (
             <Link
@@ -73,9 +74,9 @@ export function ResourceList({ resources, keyword }: ResourceListProps) {
                     <span className={`px-2 py-0.5 text-xs rounded-full ${categoryInfo?.color || 'bg-gray-100 text-gray-600'}`}>
                       {categoryInfo?.icon} {categoryInfo?.label}
                     </span>
-                    {resource.duration_seconds && (
+                    {resource.duration && (
                       <span className="text-xs text-gray-400">
-                        ⏱️ {Math.ceil(resource.duration_seconds / 60)}分钟
+                        ⏱️ {Math.ceil(resource.duration / 60)}分钟
                       </span>
                     )}
                   </div>

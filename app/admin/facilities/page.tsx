@@ -1,7 +1,5 @@
 'use client'
 
-export const dynamic = 'force-dynamic'
-
 import { useState, useEffect } from 'react'
 import { AdminHeader } from '@/components/admin/layout'
 import { DeviceStatusList } from '@/components/admin/facilities/DeviceStatusList'

@@ -32,7 +32,7 @@ export function HonorBoard({ users, loading }: HonorBoardProps) {
       <div className="grid grid-cols-3 gap-4 p-4 bg-gradient-to-b from-yellow-50 to-white">
         {users.slice(0, 3).map((user, index) => {
           const medal = getMedal(index)
-          const honor = user.honor_level ? HONOR_LEVELS[user.honor_level] : null
+          const honor = user.honor_level ? (HONOR_LEVELS as Record<string, { label: string; icon: string; minPoints: number }>)[user.honor_level] : null
           
           return (
             <div key={user.id} className="text-center">

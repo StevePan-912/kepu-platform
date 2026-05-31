@@ -1,12 +1,10 @@
 'use client'
 
-import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import type { Device } from '@/lib/supabase/types'
 import { DEVICE_TYPES } from '@/lib/constants/categories'
 import Link from 'next/link'
 import { useAppStore } from '@/lib/store'
-import DeviceDetailPanel from '@/components/map/DeviceDetailPanel'
 
 // 动态加载地图容器（纯客户端）
 const MapContainer = dynamic(() => import('@/components/map/MapContainer'), {
@@ -27,7 +25,6 @@ interface MapPageClientProps {
 
 export function MapPageClient({ devices }: MapPageClientProps) {
   const { currentDeviceId } = useAppStore()
-  const [detailPanelDevice, setDetailPanelDevice] = useState<Device | null>(null)
 
   const onlineCount = devices.filter((d) => d.status === 'online').length
   const typeStats = Object.entries(DEVICE_TYPES).map(([key, info]) => ({
@@ -70,9 +67,6 @@ export function MapPageClient({ devices }: MapPageClientProps) {
       <div className="flex-1 relative overflow-hidden">
         <MapContainer devices={devices} />
       </div>
-
-      {/* 设备详情面板 */}
-      {detailPanelDevice && <DeviceDetailPanel device={detailPanelDevice} onClose={() => setDetailPanelDevice(null)} />}
 
       {/* 底部提示 */}
       <div className="bg-white border-t border-gray-100 px-4 py-2 text-center shrink-0">
