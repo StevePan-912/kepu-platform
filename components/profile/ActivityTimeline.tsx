@@ -34,7 +34,7 @@ export function ActivityTimeline({ userId }: ActivityTimelineProps) {
     scan_ar: { icon: '📱', label: 'AR扫码' },
     search: { icon: '🔍', label: '搜索' },
     feedback: { icon: '💬', label: '反馈' },
-    activity_join: { icon: '📅', label: '活动报名' },
+    join_activity: { icon: '📅', label: '活动报名' },
   }
 
   if (loading) {

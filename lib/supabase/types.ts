@@ -146,7 +146,7 @@ export interface Database {
         Insert: {
           id?: string
           user_id?: string
-          action?: 'play_audio' | 'scan_ar' | 'search' | 'feedback' | 'join_activity'
+          action?: 'play_audio' | 'scan_ar' | 'search' | 'feedback' | 'join_activity' | 'view_resource'
           resource_id?: string | null
           device_id?: string | null
           keyword?: string | null
@@ -156,7 +156,7 @@ export interface Database {
         Update: {
           id?: string
           user_id?: string
-          action?: 'play_audio' | 'scan_ar' | 'search' | 'feedback' | 'join_activity'
+          action?: 'play_audio' | 'scan_ar' | 'search' | 'feedback' | 'join_activity' | 'view_resource'
           resource_id?: string | null
           device_id?: string | null
           keyword?: string | null

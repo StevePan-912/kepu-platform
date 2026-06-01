@@ -10,7 +10,7 @@
  *   - search（搜索）: +1
  *   - view_resource（浏览资源）: +2
  *   - scan_ar（AR扫码）: +5
- *   - activity_join（参与活动）: +10
+ *   - join_activity（参与活动）: +10
  *   - feedback（提交反馈）: +3
  *   - play_audio（播放音频）: +1
  */
@@ -28,7 +28,7 @@ const POINTS_MAP: Record<string, number> = {
   search: 1,
   view_resource: 2,
   scan_ar: 5,
-  activity_join: 10,
+  join_activity: 10,
   feedback: 3,
   play_audio: 1,
 }
@@ -41,16 +41,16 @@ Deno.serve(async (req: Request) => {
     const payload = await req.json()
     const record = payload.record
 
-    if (!record || !record.user_id || !record.action_type) {
+    if (!record || !record.user_id || !record.action) {
       return new Response(JSON.stringify({ message: '无效记录' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       })
     }
 
-    const points = POINTS_MAP[record.action_type] ?? 0
+    const points = POINTS_MAP[record.action] ?? 0
     if (points <= 0) {
-      return new Response(JSON.stringify({ message: '无需积分奖励', action_type: record.action_type }), {
+      return new Response(JSON.stringify({ message: '无需积分奖励', action: record.action }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
       })
@@ -77,15 +77,14 @@ Deno.serve(async (req: Request) => {
 
     // 写入积分记录
     const actualPoints = Math.min(points, DAILY_MAX_POINTS - todayEarned)
-    const description = getPointDescription(record.action_type)
+    const reason = getPointReason(record.action)
 
     const { error: pointError } = await supabase
       .from('point_records')
       .insert({
         user_id: record.user_id,
         points: actualPoints,
-        description,
-        source: record.action_type,
+        reason,
       })
 
     if (pointError) throw pointError
@@ -108,7 +107,7 @@ Deno.serve(async (req: Request) => {
       JSON.stringify({
         message: '积分奖励成功',
         points: actualPoints,
-        action_type: record.action_type,
+        action: record.action,
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     )
@@ -121,14 +120,14 @@ Deno.serve(async (req: Request) => {
   }
 })
 
-function getPointDescription(actionType: string): string {
+function getPointReason(action: string): string {
   const map: Record<string, string> = {
     search: '搜索科普内容',
     view_resource: '浏览科普资源',
     scan_ar: 'AR探境体验',
-    activity_join: '参与社区活动',
+    join_activity: '参与社区活动',
     feedback: '提交反馈建议',
     play_audio: '收听音频讲解',
   }
-  return map[actionType] ?? '科普互动'
+  return map[action] ?? '科普互动'
 }

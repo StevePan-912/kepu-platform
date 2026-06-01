@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
     const [activitiesRes, summariesRes] = await Promise.all([
       serviceClient
         .from('user_activities')
-        .select('created_at, action_type')
+        .select('created_at, action')
         .gte('created_at', daysAgoISO(days)),
       getResidentActivitySummaries(limit),
     ])
