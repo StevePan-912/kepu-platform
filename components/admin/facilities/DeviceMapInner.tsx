@@ -93,7 +93,7 @@ export default function DeviceMapInner() {
   const mappableDevices = devices.filter((d) => d.latitude && d.longitude)
 
   // 展览路街道附近作为默认中心（北京）
-  const defaultCenter: [number, number] = [39.932, 116.352]
+  const defaultCenter: [number, number] = [39.934, 116.341]
 
   return (
     <Card>

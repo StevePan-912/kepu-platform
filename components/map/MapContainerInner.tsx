@@ -8,9 +8,9 @@ import { DeviceMarker, MapFilter, DeviceDetailPanel } from './index'
 import { useAppStore } from '@/lib/store'
 import { useRouter } from 'next/navigation'
 
-// 默认中心坐标（北京）
-const DEFAULT_CENTER: [number, number] = [39.932, 116.352]
-const DEFAULT_ZOOM = 16
+// 默认中心坐标（北京展览路街道）
+const DEFAULT_CENTER: [number, number] = [39.934, 116.341]
+const DEFAULT_ZOOM = 15
 
 interface Props {
   devices: Device[]
