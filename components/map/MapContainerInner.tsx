@@ -68,7 +68,6 @@ export default function MapContainerInner({ devices }: Props) {
         zoom={DEFAULT_ZOOM}
         className="w-full h-full"
         zoomControl={false}
-        attributionControl={false}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
