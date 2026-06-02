@@ -70,8 +70,9 @@ export default function MapContainerInner({ devices }: Props) {
         zoomControl={false}
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}"
+          attribution='&copy; <a href="https://www.amap.com/">高德地图</a>'
+          subdomains={['1', '2', '3', '4']}
         />
 
         {/* 飞到选中设备 */}

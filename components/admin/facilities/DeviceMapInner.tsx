@@ -172,8 +172,9 @@ export default function DeviceMapInner() {
               style={{ height: '100%', width: '100%' }}
             >
               <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.amap.com/">高德地图</a>'
+                url="https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=7&x={x}&y={y}&z={z}"
+                subdomains={['1', '2', '3', '4']}
               />
               {mappableDevices.length > 0 && <FitBounds devices={mappableDevices} />}
               {mappableDevices.map((device) => (
