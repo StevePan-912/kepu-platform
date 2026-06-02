@@ -4,10 +4,21 @@ import type {
   DecisionSuggestion, Product, User
 } from './types'
 
+/** 检测 Supabase 是否已配置真实凭据（非占位符） */
+export const isSupabaseConfigured = (() => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
+  return url.startsWith('https://') && !url.includes('placeholder')
+})()
+
+/** 未配置时的空返回 */
+const EMPTY = { data: null, error: { message: 'Supabase not configured' } }
+const EMPTY_LIST = { data: [], error: null }
+
 // ============================================================
 // 科普资源
 // ============================================================
 export async function getResources(category?: string) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   let query = supabase.from('resources').select('*').order('created_at', { ascending: false })
   if (category) {
     query = query.eq('category', category)
@@ -16,6 +27,7 @@ export async function getResources(category?: string) {
 }
 
 export async function getResourceById(id: string) {
+  if (!isSupabaseConfigured) return EMPTY as { data: any; error: any }
   return supabase.from('resources').select('*').eq('id', id).single() as unknown as { data: any; error: any }
 }
 
@@ -23,6 +35,7 @@ export async function getResourceById(id: string) {
 // 设备点位
 // ============================================================
 export async function getDevices(status?: string) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   let query = supabase.from('devices').select('*').order('name')
   if (status) {
     query = query.eq('status', status)
@@ -31,6 +44,7 @@ export async function getDevices(status?: string) {
 }
 
 export async function getDeviceById(id: string) {
+  if (!isSupabaseConfigured) return EMPTY as { data: any; error: any }
   return supabase.from('devices').select('*').eq('id', id).single() as unknown as { data: any; error: any }
 }
 
@@ -38,10 +52,12 @@ export async function getDeviceById(id: string) {
 // 用户行为
 // ============================================================
 export async function recordActivity(activity: Partial<UserActivity>) {
+  if (!isSupabaseConfigured) return EMPTY as any
   return (supabase.from('user_activities') as any).insert(activity as UserActivity)
 }
 
 export async function getUserActivities(userId: string, limit = 50) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   return supabase
     .from('user_activities')
     .select('*')
@@ -51,6 +67,7 @@ export async function getUserActivities(userId: string, limit = 50) {
 }
 
 export async function getActivityStats(days = 7) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   const startDate = new Date()
   startDate.setDate(startDate.getDate() - days)
   return supabase
@@ -63,6 +80,7 @@ export async function getActivityStats(days = 7) {
 // 热词
 // ============================================================
 export async function getHotWords(period = 'weekly', limit = 30) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   return supabase
     .from('hot_words')
     .select('*')
@@ -72,8 +90,8 @@ export async function getHotWords(period = 'weekly', limit = 30) {
 }
 
 export async function upsertHotWord(word: string, period = 'daily') {
+  if (!isSupabaseConfigured) return EMPTY as any
   const today = new Date().toISOString().split('T')[0]
-  // Try to get existing record first
   const { data: existing } = await supabase
     .from('hot_words')
     .select('id, count')
@@ -83,13 +101,11 @@ export async function upsertHotWord(word: string, period = 'daily') {
     .single() as unknown as { data: any; error: any }
 
   if (existing) {
-    // Increment existing count
     return (supabase
       .from('hot_words') as any)
       .update({ count: existing.count + 1 })
       .eq('id', existing.id)
   } else {
-    // Insert new record
     return (supabase
       .from('hot_words') as any)
       .insert({ word, period, stat_date: today, count: 1 })
@@ -100,10 +116,12 @@ export async function upsertHotWord(word: string, period = 'daily') {
 // 用户信息
 // ============================================================
 export async function getUserById(id: string) {
+  if (!isSupabaseConfigured) return EMPTY as { data: any; error: any }
   return supabase.from('users').select('*').eq('id', id).single() as unknown as { data: any; error: any }
 }
 
 export async function upsertUser(userData: Partial<User> & { id: string }) {
+  if (!isSupabaseConfigured) return EMPTY as any
   return (supabase.from('users') as any).upsert(userData, { onConflict: 'id' })
 }
 
@@ -111,6 +129,8 @@ export async function upsertUser(userData: Partial<User> & { id: string }) {
 // 积分系统
 // ============================================================
 export async function updateUserPoints(userId: string, pointsToAdd: number, reason: string) {
+  if (!isSupabaseConfigured) return { error: new Error('Supabase not configured') }
+
   const { data: user, error: fetchError } = await getUserById(userId)
   if (fetchError || !user) return { error: fetchError || new Error('User not found') }
 
@@ -134,6 +154,7 @@ export async function updateUserPoints(userId: string, pointsToAdd: number, reas
 }
 
 export async function getPointRecords(userId: string, limit = 20) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   return supabase
     .from('point_records')
     .select('*')
@@ -146,6 +167,7 @@ export async function getPointRecords(userId: string, limit = 20) {
 // 积分商城
 // ============================================================
 export async function getProducts(category?: string) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   let query = supabase.from('products').select('*').gt('stock', 0).eq('is_active', true).order('points_required')
   if (category) {
     query = query.eq('category', category)
@@ -154,6 +176,8 @@ export async function getProducts(category?: string) {
 }
 
 export async function createExchange(userId: string, productId: string) {
+  if (!isSupabaseConfigured) return { error: new Error('Supabase not configured') }
+
   const { data: product, error: pErr } = await supabase
     .from('products').select('*').eq('id', productId).single() as unknown as { data: any; error: any }
   if (pErr || !product) return { error: pErr || new Error('商品不存在') }
@@ -181,6 +205,7 @@ export async function createExchange(userId: string, productId: string) {
 }
 
 export async function getUserExchanges(userId: string) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   return supabase
     .from('exchanges')
     .select('*, products(name, image_url)')
@@ -192,6 +217,7 @@ export async function getUserExchanges(userId: string) {
 // 志愿者
 // ============================================================
 export async function getVolunteerTasks(status?: string) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   let query = supabase.from('volunteer_tasks').select('*').order('created_at', { ascending: false })
   if (status) {
     query = query.eq('status', status)
@@ -200,6 +226,7 @@ export async function getVolunteerTasks(status?: string) {
 }
 
 export async function joinVolunteerTask(userId: string, taskId: string) {
+  if (!isSupabaseConfigured) return EMPTY as any
   return (supabase.from('volunteer_records') as any).insert({
     user_id: userId,
     task_id: taskId,
@@ -208,6 +235,7 @@ export async function joinVolunteerTask(userId: string, taskId: string) {
 }
 
 export async function getUserVolunteerRecords(userId: string) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   return supabase
     .from('volunteer_records')
     .select('*, volunteer_tasks(title, reward_points)')
@@ -219,6 +247,7 @@ export async function getUserVolunteerRecords(userId: string) {
 // 决策建议
 // ============================================================
 export async function getDecisionSuggestions(type?: string) {
+  if (!isSupabaseConfigured) return EMPTY_LIST as any
   let query = supabase
     .from('decision_suggestions')
     .select('*')

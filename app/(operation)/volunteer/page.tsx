@@ -7,7 +7,7 @@ import { TaskList } from '@/components/volunteer/TaskList'
 import { HourRecord } from '@/components/volunteer/HourRecord'
 import { VolunteerForm } from '@/components/volunteer/VolunteerForm'
 import { useUser } from '@/lib/hooks/useUser'
-import { supabase } from '@/lib/supabase/client'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
 import type { VolunteerTask, VolunteerRecord } from '@/lib/supabase/types'
 
 export default function VolunteerPage() {
@@ -24,7 +24,12 @@ export default function VolunteerPage() {
 
   const fetchData = async () => {
     setLoading(true)
-    
+
+    if (!isSupabaseConfigured) {
+      setLoading(false)
+      return
+    }
+
     // 获取志愿者任务
     const { data: tasksData } = await supabase
       .from('volunteer_tasks')

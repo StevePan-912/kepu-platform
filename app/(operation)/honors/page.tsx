@@ -5,7 +5,7 @@ import { NavBar } from '@/components/layout/NavBar'
 import { MobileNav } from '@/components/layout/MobileNav'
 import { HonorBoard } from '@/components/honors/HonorBoard'
 import { BadgeCollection } from '@/components/honors/BadgeCollection'
-import { supabase } from '@/lib/supabase/client'
+import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
 import type { User } from '@/lib/supabase/types'
 
 export default function HonorsPage() {
@@ -19,6 +19,12 @@ export default function HonorsPage() {
 
   const fetchTopUsers = async () => {
     setLoading(true)
+
+    if (!isSupabaseConfigured) {
+      setLoading(false)
+      return
+    }
+
     const { data } = await supabase
       .from('users')
       .select('*')
