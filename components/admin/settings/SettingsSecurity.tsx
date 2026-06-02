@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Lock, Shield, Key, Smartphone, Trash2 } from 'lucide-react'
+import { Lock, Shield, Key, Smartphone, Trash2, Check, X } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -32,7 +32,6 @@ export function SettingsSecurity() {
     }
     setChanging(true)
     setPwdMsg(null)
-    // Mock API
     await new Promise(r => setTimeout(r, 1000))
     setChanging(false)
     setPwdMsg({ type: 'success', text: '密码修改成功' })
@@ -51,15 +50,15 @@ export function SettingsSecurity() {
         <CardDescription>管理账户安全和登录验证方式</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* 修改密码 */}
+        {/* Change password */}
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+          <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
             <Lock className="w-4 h-4" />
             修改密码
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-gray-700">当前密码</label>
+              <label className="text-sm font-medium text-foreground">当前密码</label>
               <Input
                 type="password"
                 value={passwordForm.current}
@@ -68,7 +67,7 @@ export function SettingsSecurity() {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-gray-700">新密码</label>
+              <label className="text-sm font-medium text-foreground">新密码</label>
               <Input
                 type="password"
                 value={passwordForm.new}
@@ -77,7 +76,7 @@ export function SettingsSecurity() {
               />
             </div>
             <div className="space-y-1.5">
-              <label className="text-sm font-medium text-gray-700">确认新密码</label>
+              <label className="text-sm font-medium text-foreground">确认新密码</label>
               <Input
                 type="password"
                 value={passwordForm.confirm}
@@ -87,8 +86,9 @@ export function SettingsSecurity() {
             </div>
           </div>
           {pwdMsg && (
-            <div className={`text-sm ${pwdMsg.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
-              {pwdMsg.type === 'success' ? '✓' : '✗'} {pwdMsg.text}
+            <div className={`text-sm flex items-center gap-1 ${pwdMsg.type === 'success' ? 'text-success' : 'text-destructive'}`}>
+              {pwdMsg.type === 'success' ? <Check className="w-3.5 h-3.5" /> : <X className="w-3.5 h-3.5" />}
+              {pwdMsg.text}
             </div>
           )}
           <Button onClick={handleChangePassword} disabled={changing}>
@@ -96,22 +96,22 @@ export function SettingsSecurity() {
           </Button>
         </div>
 
-        <hr className="border-gray-200" />
+        <hr className="border-border" />
 
-        {/* 双因素认证 */}
+        {/* 2FA */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-50 rounded-lg">
-              <Smartphone className="w-5 h-5 text-green-600" />
+            <div className="p-2 bg-success/10 rounded-lg">
+              <Smartphone className="w-5 h-5 text-success" />
             </div>
             <div>
-              <div className="font-medium text-gray-900">双因素认证 (2FA)</div>
-              <div className="text-sm text-gray-500">使用 authenticator 应用增强账户安全</div>
+              <div className="font-medium text-foreground">双因素认证 (2FA)</div>
+              <div className="text-sm text-muted-foreground">使用 authenticator 应用增强账户安全</div>
             </div>
           </div>
           <div className="flex items-center gap-3">
             {twoFAEnabled ? (
-              <Badge className="bg-green-100 text-green-700 hover:bg-green-100">已启用</Badge>
+              <Badge className="bg-success/10 text-success hover:bg-success/10">已启用</Badge>
             ) : (
               <Badge variant="secondary">未启用</Badge>
             )}
@@ -121,34 +121,34 @@ export function SettingsSecurity() {
           </div>
         </div>
 
-        <hr className="border-gray-200" />
+        <hr className="border-border" />
 
-        {/* 登录会话 */}
+        {/* Sessions */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-blue-50 rounded-lg">
-              <Key className="w-5 h-5 text-blue-600" />
+            <div className="p-2 bg-accent rounded-lg">
+              <Key className="w-5 h-5 text-primary" />
             </div>
             <div>
-              <div className="font-medium text-gray-900">登录会话</div>
-              <div className="text-sm text-gray-500">当前有 2 个活跃会话</div>
+              <div className="font-medium text-foreground">登录会话</div>
+              <div className="text-sm text-muted-foreground">当前有 2 个活跃会话</div>
             </div>
           </div>
           <Button variant="outline" size="sm">管理会话</Button>
         </div>
 
-        <hr className="border-gray-200" />
+        <hr className="border-border" />
 
-        {/* 危险操作 */}
+        {/* Danger zone */}
         <div>
-          <h3 className="text-sm font-semibold text-red-600 flex items-center gap-2 mb-3">
+          <h3 className="text-sm font-semibold text-destructive flex items-center gap-2 mb-3">
             <Trash2 className="w-4 h-4" />
             危险操作
           </h3>
-          <div className="flex items-center justify-between p-3 border border-red-200 rounded-lg bg-red-50">
+          <div className="flex items-center justify-between p-3 border border-destructive/20 rounded-lg bg-destructive/5">
             <div>
-              <div className="font-medium text-gray-900">删除账户</div>
-              <div className="text-sm text-gray-500">永久删除账户及所有关联数据，此操作不可恢复</div>
+              <div className="font-medium text-foreground">删除账户</div>
+              <div className="text-sm text-muted-foreground">永久删除账户及所有关联数据，此操作不可恢复</div>
             </div>
             <Button variant="destructive" size="sm">删除账户</Button>
           </div>

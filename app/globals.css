@@ -1,59 +1,191 @@
 @import "tailwindcss";
 
 @theme inline {
+  /* ── Color tokens ── */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* ── Radius scale ── */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* ── Font families ── */
+  --font-sans: 'Inter', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Inter', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, monospace;
 }
 
+/* ══════════════════════════════════════════
+   Light Theme
+   Cool blue-gray · AI SaaS aesthetic
+   ══════════════════════════════════════════ */
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --radius: 0.5rem;
+
+  /* Surfaces */
+  --background: oklch(0.99 0.002 250);
+  --foreground: oklch(0.13 0.02 260);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.13 0.02 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.13 0.02 260);
+
+  /* Primary: deep cool blue-gray */
+  --primary: oklch(0.40 0.025 260);
+  --primary-foreground: oklch(0.98 0.002 250);
+
+  /* Secondary: very light blue-gray */
+  --secondary: oklch(0.96 0.005 260);
+  --secondary-foreground: oklch(0.25 0.02 260);
+
+  /* Muted */
+  --muted: oklch(0.96 0.005 260);
+  --muted-foreground: oklch(0.52 0.015 260);
+
+  /* Accent: subtle interactive blue */
+  --accent: oklch(0.95 0.012 250);
+  --accent-foreground: oklch(0.25 0.02 260);
+
+  /* Destructive */
+  --destructive: oklch(0.55 0.2 25);
+  --destructive-foreground: oklch(0.98 0.002 250);
+
+  /* Borders & inputs */
+  --border: oklch(0.92 0.005 260);
+  --input: oklch(0.92 0.005 260);
+  --ring: oklch(0.55 0.04 250);
+
+  /* Semantic colors */
+  --success: oklch(0.50 0.12 160);
+  --success-foreground: oklch(0.98 0.005 160);
+  --warning: oklch(0.65 0.12 70);
+  --warning-foreground: oklch(0.15 0.02 70);
+  --info: oklch(0.50 0.1 250);
+  --info-foreground: oklch(0.98 0.005 250);
+
+  /* Chart palette */
+  --chart-1: oklch(0.50 0.1 250);
+  --chart-2: oklch(0.50 0.12 160);
+  --chart-3: oklch(0.60 0.1 30);
+  --chart-4: oklch(0.55 0.12 300);
+  --chart-5: oklch(0.60 0.12 60);
+
+  /* Shadow */
+  --shadow-color: oklch(0.60 0.01 260 / 0.08);
 }
 
+/* ══════════════════════════════════════════
+   Dark Theme
+   Deep blue-gray · AI SaaS aesthetic
+   ══════════════════════════════════════════ */
+.dark {
+  /* Surfaces */
+  --background: oklch(0.11 0.015 260);
+  --foreground: oklch(0.93 0.005 260);
+  --card: oklch(0.15 0.015 260);
+  --card-foreground: oklch(0.93 0.005 260);
+  --popover: oklch(0.15 0.015 260);
+  --popover-foreground: oklch(0.93 0.005 260);
+
+  /* Primary: light blue-gray */
+  --primary: oklch(0.92 0.01 260);
+  --primary-foreground: oklch(0.15 0.02 260);
+
+  /* Secondary */
+  --secondary: oklch(0.21 0.015 260);
+  --secondary-foreground: oklch(0.88 0.008 260);
+
+  /* Muted */
+  --muted: oklch(0.21 0.015 260);
+  --muted-foreground: oklch(0.58 0.02 260);
+
+  /* Accent */
+  --accent: oklch(0.21 0.02 250);
+  --accent-foreground: oklch(0.88 0.008 260);
+
+  /* Destructive */
+  --destructive: oklch(0.60 0.2 25);
+  --destructive-foreground: oklch(0.95 0.005 25);
+
+  /* Borders & inputs */
+  --border: oklch(0.24 0.015 260);
+  --input: oklch(0.24 0.015 260);
+  --ring: oklch(0.55 0.06 250);
+
+  /* Semantic colors */
+  --success: oklch(0.60 0.12 160);
+  --success-foreground: oklch(0.12 0.01 160);
+  --warning: oklch(0.70 0.12 70);
+  --warning-foreground: oklch(0.15 0.02 70);
+  --info: oklch(0.60 0.1 250);
+  --info-foreground: oklch(0.12 0.01 250);
+
+  /* Chart palette */
+  --chart-1: oklch(0.60 0.1 250);
+  --chart-2: oklch(0.60 0.12 160);
+  --chart-3: oklch(0.65 0.1 30);
+  --chart-4: oklch(0.60 0.12 300);
+  --chart-5: oklch(0.65 0.12 60);
+
+  /* Shadow */
+  --shadow-color: oklch(0 0 0 / 0.35);
+}
+
+/* ══════════════════════════════════════════
+   Base styles
+   ══════════════════════════════════════════ */
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+/* ══════════════════════════════════════════
+   Frosted glass utility
+   ══════════════════════════════════════════ */
+@layer utilities {
+  .glass {
+    background: oklch(1 0 0 / 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+  .dark .glass {
+    background: oklch(0.15 0.015 260 / 0.72);
   }
 }

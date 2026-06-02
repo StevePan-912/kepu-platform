@@ -4,20 +4,21 @@ import { useState, useEffect } from 'react'
 import type { Product } from '@/lib/supabase/types'
 import { getProducts } from '@/lib/supabase/queries'
 import ProductCard from './ProductCard'
-import { Package, Search, Loader2 } from 'lucide-react'
+import { Package, Search, Loader2, BookOpen, Pencil, ToyBrick, Ticket, Award, Gift } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 interface ProductGridProps {
   userPoints: number
   onExchange: (product: Product) => void
 }
 
-const CATEGORIES = [
-  { id: '', label: '全部', icon: '🎁' },
-  { id: 'book', label: '书籍', icon: '📚' },
-  { id: 'stationery', label: '文具', icon: '✏️' },
-  { id: 'toy', label: '玩具', icon: '🧸' },
-  { id: 'coupon', label: '券码', icon: '🎟️' },
-  { id: 'badge', label: '徽章', icon: '🏅' },
+const CATEGORIES: { id: string; label: string; icon: LucideIcon }[] = [
+  { id: '', label: '全部', icon: Gift },
+  { id: 'book', label: '书籍', icon: BookOpen },
+  { id: 'stationery', label: '文具', icon: Pencil },
+  { id: 'toy', label: '玩具', icon: ToyBrick },
+  { id: 'coupon', label: '券码', icon: Ticket },
+  { id: 'badge', label: '徽章', icon: Award },
 ]
 
 // 兜底模拟数据（Supabase 未连接时展示）
@@ -72,43 +73,46 @@ export default function ProductGrid({ userPoints, onExchange }: ProductGridProps
     <div>
       {/* 搜索框 */}
       <div className="relative mb-4">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <input
           type="text"
           placeholder="搜索商品名称..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-9 pr-4 text-sm outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+          className="w-full rounded-xl border border-border bg-background py-2.5 pl-9 pr-4 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
         />
       </div>
 
       {/* 分类筛选 */}
       <div className="mb-4 flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-        {CATEGORIES.map(cat => (
-          <button
-            key={cat.id}
-            onClick={() => setActiveCategory(cat.id)}
-            className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-medium transition ${
-              activeCategory === cat.id
-                ? 'bg-emerald-500 text-white shadow-sm'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <span>{cat.icon}</span>
-            {cat.label}
-          </button>
-        ))}
+        {CATEGORIES.map(cat => {
+          const CatIcon = cat.icon
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={`flex shrink-0 items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-medium transition ${
+                activeCategory === cat.id
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'bg-muted text-muted-foreground hover:bg-accent'
+              }`}
+            >
+              <CatIcon className="h-4 w-4" />
+              {cat.label}
+            </button>
+          )
+        })}
       </div>
 
       {/* 商品网格 */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-          <Loader2 className="mb-3 h-8 w-8 animate-spin text-emerald-500" />
+        <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+          <Loader2 className="mb-3 h-8 w-8 animate-spin text-primary" />
           <p className="text-sm">加载商品中...</p>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-          <Package className="mb-3 h-12 w-12 text-gray-200" />
+        <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+          <Package className="mb-3 h-12 w-12 text-muted-foreground/40" />
           <p className="text-sm">暂无符合条件的商品</p>
         </div>
       ) : (

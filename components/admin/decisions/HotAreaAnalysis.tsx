@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { MapPinned } from 'lucide-react'
 import type { HotAreaItem } from '@/lib/supabase/admin/types'
 import { getHotAreas } from '@/lib/supabase/admin/queries'
 
@@ -31,15 +32,18 @@ export function HotAreaAnalysis() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">🗺️ 热门区域分析</CardTitle>
+        <CardTitle className="text-base flex items-center gap-2">
+          <MapPinned className="w-4 h-4" />
+          热门区域分析
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="h-80 flex items-center justify-center text-gray-400">
+          <div className="h-80 flex items-center justify-center text-muted-foreground">
             加载中...
           </div>
         ) : data.length === 0 ? (
-          <div className="h-80 flex items-center justify-center text-gray-400">
+          <div className="h-80 flex items-center justify-center text-muted-foreground">
             暂无区域活动数据
           </div>
         ) : (
@@ -64,7 +68,7 @@ export function HotAreaAnalysis() {
               <Bar
                 dataKey="activityCount"
                 name="活动次数"
-                fill="#3b82f6"
+                fill="#4a6fa5"
                 radius={[0, 4, 4, 0]}
               />
             </BarChart>

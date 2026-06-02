@@ -33,36 +33,36 @@ export function DecisionStats() {
       label: '建议总数',
       value: total,
       icon: Lightbulb,
-      color: 'text-yellow-600',
-      bg: 'bg-yellow-50',
+      color: 'text-warning',
+      bg: 'bg-warning/10',
     },
     {
       label: '激活建议',
       value: active,
       icon: CheckCircle,
-      color: 'text-green-600',
-      bg: 'bg-green-50',
+      color: 'text-success',
+      bg: 'bg-success/10',
     },
     {
       label: '活动类',
       value: activityCount,
       icon: Zap,
-      color: 'text-blue-600',
-      bg: 'bg-blue-50',
+      color: 'text-primary',
+      bg: 'bg-accent',
     },
     {
       label: '内容类',
       value: contentCount,
       icon: BookOpen,
-      color: 'text-purple-600',
-      bg: 'bg-purple-50',
+      color: 'text-primary',
+      bg: 'bg-accent',
     },
     {
       label: '位置类',
       value: locationCount,
       icon: MapPin,
-      color: 'text-orange-600',
-      bg: 'bg-orange-50',
+      color: 'text-warning',
+      bg: 'bg-warning/10',
     },
   ]
 
@@ -72,8 +72,8 @@ export function DecisionStats() {
         {[...Array(5)].map((_, i) => (
           <Card key={i} className="animate-pulse">
             <CardContent className="p-6">
-              <div className="h-4 bg-gray-200 rounded w-1/2 mb-3" />
-              <div className="h-8 bg-gray-200 rounded w-1/3" />
+              <div className="h-4 bg-muted rounded w-1/2 mb-3" />
+              <div className="h-8 bg-muted rounded w-1/3" />
             </CardContent>
           </Card>
         ))}
@@ -89,8 +89,8 @@ export function DecisionStats() {
           <Card key={card.label}>
             <CardContent className="p-6 flex items-start justify-between">
               <div>
-                <p className="text-sm text-gray-500">{card.label}</p>
-                <p className="text-2xl font-bold mt-1">{card.value}</p>
+                <p className="text-sm text-muted-foreground">{card.label}</p>
+                <p className="text-2xl font-bold mt-1 text-foreground">{card.value}</p>
               </div>
               <div className={`p-3 rounded-lg ${card.bg}`}>
                 <Icon className={`w-5 h-5 ${card.color}`} />

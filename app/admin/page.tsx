@@ -121,8 +121,8 @@ export default function AdminDashboard() {
       value: stats.deviceStats ? `${stats.deviceStats.onlineRate}%` : '--',
       change: getMockChange(stats.deviceStats?.onlineRate || 0, 'onlineRate'),
       icon: Radio,
-      color: 'text-green-600',
-      bgColor: 'bg-green-50',
+      color: 'text-success',
+      bgColor: 'bg-success/10',
       loading: loading && !stats.deviceStats,
     },
     {
@@ -130,8 +130,8 @@ export default function AdminDashboard() {
       value: stats.userStats ? formatNumber(stats.userStats.totalUsers) : '--',
       change: getMockChange(stats.userStats?.totalUsers || 0, 'users'),
       icon: Users,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-50',
+      color: 'text-primary',
+      bgColor: 'bg-accent',
       loading: loading && !stats.userStats,
     },
     {
@@ -139,8 +139,8 @@ export default function AdminDashboard() {
       value: formatNumber(stats.todayActivities),
       change: getMockChange(stats.todayActivities, 'activities'),
       icon: Activity,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-50',
+      color: 'text-primary',
+      bgColor: 'bg-accent',
       loading,
     },
     {
@@ -148,8 +148,8 @@ export default function AdminDashboard() {
       value: stats.pendingSuggestions.toString(),
       change: getMockChange(stats.pendingSuggestions, 'suggestions'),
       icon: Lightbulb,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-50',
+      color: 'text-warning',
+      bgColor: 'bg-warning/10',
       loading,
     },
   ]
@@ -157,14 +157,14 @@ export default function AdminDashboard() {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center justify-between p-4 lg:p-6 border-b bg-white">
+      <div className="flex items-center justify-between p-4 lg:p-6 border-b border-border bg-background">
         <div>
-          <h1 className="text-xl font-bold">管理仪表盘</h1>
-          <p className="text-sm text-gray-500 mt-0.5">欢迎回来，管理员</p>
+          <h1 className="text-xl font-bold text-foreground">管理仪表盘</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">欢迎回来，管理员</p>
         </div>
         <button
           onClick={fetchDashboardData}
-          className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-2 px-3 py-2 text-sm border border-border rounded-lg hover:bg-muted transition-colors text-foreground"
           disabled={loading}
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -175,7 +175,7 @@ export default function AdminDashboard() {
       <div className="p-4 lg:p-6 space-y-6">
         {/* Error Banner */}
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+          <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm">
             {error}
           </div>
         )}
@@ -188,7 +188,7 @@ export default function AdminDashboard() {
             return (
               <Card key={stat.title}>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-500">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">
                     {stat.title}
                   </CardTitle>
                   <div className={`p-2 rounded-lg ${stat.bgColor}`}>
@@ -199,22 +199,22 @@ export default function AdminDashboard() {
                   {stat.loading ? (
                     <Skeleton className="h-8 w-20" />
                   ) : (
-                    <div className="text-2xl font-bold">{stat.value}</div>
+                    <div className="text-2xl font-bold text-foreground">{stat.value}</div>
                   )}
                   <div className="flex items-center gap-1 mt-1">
                     <TrendIcon
                       className={`w-4 h-4 ${
-                        stat.change.trend === 'up' ? 'text-green-500' : 'text-red-500'
+                        stat.change.trend === 'up' ? 'text-success' : 'text-destructive'
                       }`}
                     />
                     <span
                       className={`text-xs ${
-                        stat.change.trend === 'up' ? 'text-green-500' : 'text-red-500'
+                        stat.change.trend === 'up' ? 'text-success' : 'text-destructive'
                       }`}
                     >
                       {stat.loading ? '--' : stat.change.value}
                     </span>
-                    <span className="text-xs text-gray-400">较昨日</span>
+                    <span className="text-xs text-muted-foreground">较昨日</span>
                   </div>
                 </CardContent>
               </Card>
@@ -227,7 +227,7 @@ export default function AdminDashboard() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="w-5 h-5 text-orange-500" />
+                <AlertCircle className="w-5 h-5 text-warning" />
                 最近告警
               </CardTitle>
               <CardDescription>设备状态异常提醒</CardDescription>
@@ -240,7 +240,7 @@ export default function AdminDashboard() {
                   ))}
                 </div>
               ) : recentAlerts.length === 0 ? (
-                <div className="text-center py-8 text-gray-400">
+                <div className="text-center py-8 text-muted-foreground">
                   <CheckCircle2 className="w-8 h-8 mx-auto mb-2" />
                   <p>暂无未处理告警</p>
                 </div>
@@ -249,23 +249,23 @@ export default function AdminDashboard() {
                   {recentAlerts.map((alert) => (
                     <div
                       key={alert.id}
-                      className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                      className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         {alert.status === 'pending' ? (
-                          <AlertCircle className="w-5 h-5 text-red-500" />
+                          <AlertCircle className="w-5 h-5 text-destructive" />
                         ) : alert.status === 'acknowledged' ? (
-                          <AlertCircle className="w-5 h-5 text-yellow-500" />
+                          <AlertCircle className="w-5 h-5 text-warning" />
                         ) : (
-                          <CheckCircle2 className="w-5 h-5 text-green-500" />
+                          <CheckCircle2 className="w-5 h-5 text-success" />
                         )}
                         <div>
-                          <p className="font-medium text-gray-900">{alert.device_name}</p>
-                          <p className="text-sm text-gray-500">{alert.message}</p>
+                          <p className="font-medium text-foreground">{alert.device_name}</p>
+                          <p className="text-sm text-muted-foreground">{alert.message}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-400">{timeAgo(alert.created_at)}</p>
+                        <p className="text-sm text-muted-foreground">{timeAgo(alert.created_at)}</p>
                         <Badge
                           variant={
                             alert.status === 'pending'
@@ -289,7 +289,7 @@ export default function AdminDashboard() {
               )}
               <Link
                 href="/admin/facilities"
-                className="block mt-4 text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                className="block mt-4 text-sm text-primary hover:underline"
               >
                 查看全部告警 →
               </Link>
@@ -310,12 +310,12 @@ export default function AdminDashboard() {
                     <Link
                       key={action.href}
                       href={action.href}
-                      className="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                      className="flex items-center gap-3 p-4 rounded-lg border border-border hover:bg-muted transition-colors"
                     >
-                      <div className="p-2 rounded-lg bg-blue-50">
-                        <Icon className="w-5 h-5 text-blue-600" />
+                      <div className="p-2 rounded-lg bg-accent">
+                        <Icon className="w-5 h-5 text-primary" />
                       </div>
-                      <span className="font-medium text-gray-900">{action.label}</span>
+                      <span className="font-medium text-foreground">{action.label}</span>
                     </Link>
                   )
                 })}

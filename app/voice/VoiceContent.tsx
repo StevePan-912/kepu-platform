@@ -2,11 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { NavBar } from '@/components/layout/NavBar'
-import { MobileNav } from '@/components/layout/MobileNav'
 import { VoiceSearch, HotWords, ResourceList } from '@/components/voice'
 import { getHotWords, getResources } from '@/lib/supabase/queries'
 import type { HotWord, Resource } from '@/lib/supabase/types'
+import { Mic, Mic2, Sparkles } from 'lucide-react'
 
 // Mock数据用于降级
 const MOCK_HOT_WORDS: HotWord[] = [
@@ -182,8 +181,8 @@ function VoiceContent() {
     <div className="px-4 pt-4 space-y-4">
       {/* 页面标题 */}
       <div className="flex items-center gap-2">
-        <span className="text-2xl">🎤</span>
-        <h1 className="text-xl font-bold text-gray-900">语音交互</h1>
+        <Mic className="h-6 w-6 text-primary" />
+        <h1 className="text-xl font-bold text-foreground">语音交互</h1>
       </div>
 
       {/* 搜索框 */}
@@ -195,10 +194,10 @@ function VoiceContent() {
 
       {/* 语音提示 */}
       {isListening && (
-        <div className="bg-blue-50 rounded-xl p-4 text-center">
-          <div className="text-3xl mb-2 animate-bounce">🎙️</div>
-          <p className="text-blue-600 font-medium">正在聆听，请说出关键词...</p>
-          <p className="text-sm text-blue-400 mt-1">说完后系统将自动搜索</p>
+        <div className="bg-accent rounded-xl p-4 text-center">
+          <Mic2 className="h-8 w-8 mx-auto mb-2 animate-bounce text-primary" />
+          <p className="text-primary font-medium">正在聆听，请说出关键词...</p>
+          <p className="text-sm text-muted-foreground mt-1">说完后系统将自动搜索</p>
         </div>
       )}
 
@@ -206,13 +205,13 @@ function VoiceContent() {
       {currentSearch ? (
         <>
           <div className="flex items-center justify-between">
-            <h2 className="font-bold text-gray-900">搜索结果</h2>
+            <h2 className="font-bold text-foreground">搜索结果</h2>
             <button
               onClick={() => {
                 setCurrentSearch('')
                 setResources([])
               }}
-              className="text-sm text-blue-500 hover:underline"
+              className="text-sm text-primary hover:underline"
             >
               清除搜索
             </button>
@@ -220,13 +219,13 @@ function VoiceContent() {
           {isLoading ? (
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white rounded-xl p-4 animate-pulse">
+                <div key={i} className="bg-background rounded-xl p-4 animate-pulse">
                   <div className="flex items-start gap-3">
-                    <div className="w-12 h-12 bg-gray-200 rounded-lg" />
+                    <div className="w-12 h-12 bg-muted rounded-lg" />
                     <div className="flex-1">
-                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-                      <div className="h-3 bg-gray-200 rounded w-full mb-2" />
-                      <div className="h-3 bg-gray-200 rounded w-1/2" />
+                      <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                      <div className="h-3 bg-muted rounded w-full mb-2" />
+                      <div className="h-3 bg-muted rounded w-1/2" />
                     </div>
                   </div>
                 </div>
@@ -244,18 +243,18 @@ function VoiceContent() {
           {/* 为你推荐 */}
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-lg">✨</span>
-              <h2 className="font-bold text-gray-900">为你推荐</h2>
+              <Sparkles className="h-5 w-5 text-primary" />
+              <h2 className="font-bold text-foreground">为你推荐</h2>
             </div>
             {isLoading ? (
               <div className="space-y-3">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-white rounded-xl p-4 animate-pulse">
+                  <div key={i} className="bg-background rounded-xl p-4 animate-pulse">
                     <div className="flex items-start gap-3">
-                      <div className="w-12 h-12 bg-gray-200 rounded-lg" />
+                      <div className="w-12 h-12 bg-muted rounded-lg" />
                       <div className="flex-1">
-                        <div className="h-4 bg-gray-200 rounded w-3/4 mb-2" />
-                        <div className="h-3 bg-gray-200 rounded w-full" />
+                        <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                        <div className="h-3 bg-muted rounded w-full" />
                       </div>
                     </div>
                   </div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Gift } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,16 +20,16 @@ export function VolunteerForm({ onClose, onSubmit }: VolunteerFormProps) {
 
   const handleSubmit = async () => {
     if (!user || !hours) return
-    
+
     setSubmitting(true)
-    
+
     // 模拟提交（实际应写入数据库）
     console.log('志愿者申请:', {
       user_id: user.id,
       hours: parseFloat(hours),
       description,
     })
-    
+
     setSubmitting(false)
     onSubmit()
   }
@@ -42,7 +43,7 @@ export function VolunteerForm({ onClose, onSubmit }: VolunteerFormProps) {
 
         <div className="space-y-4">
           <div>
-            <label className="text-sm text-gray-600 mb-1 block">服务时长（小时）</label>
+            <label className="text-sm text-muted-foreground mb-1 block">服务时长（小时）</label>
             <Input
               type="number"
               value={hours}
@@ -52,7 +53,7 @@ export function VolunteerForm({ onClose, onSubmit }: VolunteerFormProps) {
           </div>
 
           <div>
-            <label className="text-sm text-gray-600 mb-1 block">服务说明</label>
+            <label className="text-sm text-muted-foreground mb-1 block">服务说明</label>
             <Input
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -60,9 +61,10 @@ export function VolunteerForm({ onClose, onSubmit }: VolunteerFormProps) {
             />
           </div>
 
-          <div className="bg-purple-50 rounded-lg p-3">
-            <p className="text-sm text-purple-600">
-              🎁 完成志愿服务可获得积分奖励
+          <div className="bg-accent rounded-lg p-3">
+            <p className="text-sm text-primary flex items-center gap-2">
+              <Gift className="w-4 h-4" />
+              完成志愿服务可获得积分奖励
             </p>
           </div>
 
@@ -73,7 +75,7 @@ export function VolunteerForm({ onClose, onSubmit }: VolunteerFormProps) {
             <Button
               onClick={handleSubmit}
               disabled={submitting || !hours}
-              className="flex-1 bg-purple-500"
+              className="flex-1 bg-primary text-primary-foreground"
             >
               {submitting ? '提交中...' : '提交申请'}
             </Button>

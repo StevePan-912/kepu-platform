@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useAppStore } from '@/lib/store'
 import type { HotWord } from '@/lib/supabase/types'
+import { Flame } from 'lucide-react'
 
 interface HotWordsProps {
   hotWords: HotWord[]
@@ -18,10 +19,10 @@ export function HotWords({ hotWords, onWordClick }: HotWordsProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm">
+    <div className="bg-background rounded-xl p-4 shadow-sm border border-border">
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-lg">🔥</span>
-        <h3 className="font-bold text-gray-900">热门搜索</h3>
+        <Flame className="h-5 w-5 text-primary" />
+        <h3 className="font-bold text-foreground">热门搜索</h3>
       </div>
       <div className="flex flex-wrap gap-2">
         {hotWords.slice(0, 12).map((item, index) => (
@@ -29,13 +30,13 @@ export function HotWords({ hotWords, onWordClick }: HotWordsProps) {
             key={item.id}
             href={`/voice?search=${encodeURIComponent(item.word)}`}
             onClick={() => handleClick(item.word)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 rounded-full text-sm hover:bg-blue-50 hover:text-blue-600 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-muted rounded-full text-sm text-foreground hover:bg-accent hover:text-primary transition-colors"
           >
             <span className={`font-bold ${
-              index === 0 ? 'text-red-500' :
-              index === 1 ? 'text-orange-500' :
-              index === 2 ? 'text-yellow-500' :
-              'text-gray-400'
+              index === 0 ? 'text-destructive' :
+              index === 1 ? 'text-warning' :
+              index === 2 ? 'text-primary' :
+              'text-muted-foreground'
             }`}>
               {index + 1}
             </span>

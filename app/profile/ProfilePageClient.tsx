@@ -58,20 +58,20 @@ export default function ProfilePageClient() {
   // 未登录状态
   if (!loading && !user) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center px-6">
         <div className="text-center">
-          <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg">
-            <UserIcon className="h-12 w-12 text-white" />
+          <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-primary shadow-lg">
+            <UserIcon className="h-12 w-12 text-background" />
           </div>
-          <h2 className="text-xl font-bold text-gray-900">登录科普漫步</h2>
-          <p className="mt-2 text-sm text-gray-500">登录后查看个人中心、积分记录和行为历史</p>
+          <h2 className="text-xl font-bold text-foreground">登录科普漫步</h2>
+          <p className="mt-2 text-sm text-muted-foreground">登录后查看个人中心、积分记录和行为历史</p>
           <button
             onClick={() => loginDemo()}
-            className="mt-6 w-full max-w-xs rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 py-3 text-sm font-medium text-white shadow-lg transition hover:shadow-xl active:scale-95"
+            className="mt-6 w-full max-w-xs rounded-2xl bg-primary py-3 text-sm font-medium text-background shadow-lg transition hover:shadow-xl active:scale-95"
           >
             体验登录
           </button>
-          <p className="mt-3 text-xs text-gray-400">演示模式将使用虚拟用户数据</p>
+          <p className="mt-3 text-xs text-muted-foreground">演示模式将使用虚拟用户数据</p>
         </div>
       </div>
     )
@@ -80,36 +80,36 @@ export default function ProfilePageClient() {
   // 加载中
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-background pb-24">
       {/* 个人信息卡 */}
       <ProfileCard user={user!} onLogout={handleLogout} />
 
       {/* 统计概览 */}
       <div className="mx-4 mt-4 grid grid-cols-4 gap-2">
         {[
-          { icon: Coins, label: '积分', value: totalPoints, color: 'text-amber-500' },
-          { icon: Trophy, label: '荣誉', value: user?.honor_level === 'leader' ? '领航者' : user?.honor_level === 'communicator' ? '传播者' : '探索者', color: 'text-blue-500' },
-          { icon: Clock, label: '互动', value: activities.length || '-', color: 'text-emerald-500' },
-          { icon: Award, label: '等级', value: user?.honor_level === 'leader' ? 'Lv.3' : user?.honor_level === 'communicator' ? 'Lv.2' : 'Lv.1', color: 'text-purple-500' },
+          { icon: Coins, label: '积分', value: totalPoints, color: 'text-warning' },
+          { icon: Trophy, label: '荣誉', value: user?.honor_level === 'leader' ? '领航者' : user?.honor_level === 'communicator' ? '传播者' : '探索者', color: 'text-primary' },
+          { icon: Clock, label: '互动', value: activities.length || '-', color: 'text-success' },
+          { icon: Award, label: '等级', value: user?.honor_level === 'leader' ? 'Lv.3' : user?.honor_level === 'communicator' ? 'Lv.2' : 'Lv.1', color: 'text-primary' },
         ].map(item => (
-          <div key={item.label} className="flex flex-col items-center rounded-xl bg-white p-3 shadow-sm">
+          <div key={item.label} className="flex flex-col items-center rounded-xl bg-background p-3 ring-1 ring-border">
             <item.icon className={`mb-1.5 h-5 w-5 ${item.color}`} />
-            <span className="text-sm font-bold text-gray-800">{item.value}</span>
-            <span className="mt-0.5 text-xs text-gray-400">{item.label}</span>
+            <span className="text-sm font-bold text-foreground">{item.value}</span>
+            <span className="mt-0.5 text-xs text-muted-foreground">{item.label}</span>
           </div>
         ))}
       </div>
 
       {/* 快捷入口 */}
-      <div className="mx-4 mt-4 rounded-2xl bg-white p-4 shadow-sm">
-        <h3 className="mb-3 text-sm font-semibold text-gray-700">快捷入口</h3>
+      <div className="mx-4 mt-4 rounded-2xl bg-background p-4 ring-1 ring-border">
+        <h3 className="mb-3 text-sm font-semibold text-foreground">快捷入口</h3>
         <div className="space-y-1">
           {[
             { icon: ShoppingBag, label: '积分商城', desc: '用积分兑换礼品', href: '/mall' },
@@ -119,29 +119,29 @@ export default function ProfilePageClient() {
             <button
               key={item.label}
               onClick={() => item.tab ? setActiveTab(item.tab) : null}
-              className="flex w-full items-center gap-3 rounded-xl p-3 text-left transition hover:bg-gray-50"
+              className="flex w-full items-center gap-3 rounded-xl p-3 text-left transition hover:bg-accent"
             >
               {item.href ? (
                 <a href={item.href} className="flex w-full items-center gap-3 text-left no-underline text-inherit">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
-                    <item.icon className="h-5 w-5 text-gray-500" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
+                    <item.icon className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-800">{item.label}</p>
-                    <p className="text-xs text-gray-400">{item.desc}</p>
+                    <p className="text-sm font-medium text-foreground">{item.label}</p>
+                    <p className="text-xs text-muted-foreground">{item.desc}</p>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-gray-300" />
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </a>
               ) : (
                 <>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
-                    <item.icon className="h-5 w-5 text-gray-500" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
+                    <item.icon className="h-5 w-5 text-muted-foreground" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-800">{item.label}</p>
-                    <p className="text-xs text-gray-400">{item.desc}</p>
+                    <p className="text-sm font-medium text-foreground">{item.label}</p>
+                    <p className="text-xs text-muted-foreground">{item.desc}</p>
                   </div>
-                  <ChevronRight className="h-4 w-4 text-gray-300" />
+                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
                 </>
               )}
             </button>
@@ -151,11 +151,11 @@ export default function ProfilePageClient() {
 
       {/* Tab 区域：积分记录 / 行为历史 */}
       <div className="mx-4 mt-4">
-        <div className="mb-3 flex rounded-xl bg-gray-100 p-1">
+        <div className="mb-3 flex rounded-xl bg-muted p-1">
           <button
             onClick={() => setActiveTab('points')}
             className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${
-              activeTab === 'points' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500'
+              activeTab === 'points' ? 'bg-background text-primary ring-1 ring-border' : 'text-muted-foreground'
             }`}
           >
             <Coins className="h-4 w-4" />
@@ -164,7 +164,7 @@ export default function ProfilePageClient() {
           <button
             onClick={() => setActiveTab('activity')}
             className={`flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${
-              activeTab === 'activity' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500'
+              activeTab === 'activity' ? 'bg-background text-primary ring-1 ring-border' : 'text-muted-foreground'
             }`}
           >
             <Clock className="h-4 w-4" />
@@ -173,33 +173,33 @@ export default function ProfilePageClient() {
         </div>
 
         <div className="mb-2 flex items-center justify-between">
-          <h3 className="text-sm font-semibold text-gray-700">
+          <h3 className="text-sm font-semibold text-foreground">
             {activeTab === 'points' ? '积分收支明细' : '科普互动记录'}
           </h3>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-muted-foreground">
             {activeTab === 'points' ? `共 ${pointRecords.length} 条` : `共 ${activities.length} 条`}
           </span>
         </div>
 
         {activeTab === 'points' ? (
           pointsLoading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-              <Loader2 className="mb-3 h-8 w-8 animate-spin text-blue-500" />
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <Loader2 className="mb-3 h-8 w-8 animate-spin text-primary" />
               <p className="text-sm">加载中...</p>
             </div>
           ) : pointRecords.length === 0 ? (
-            <div className="rounded-2xl bg-white p-8 text-center shadow-sm text-gray-400">
-              <Coins className="mx-auto mb-3 h-12 w-12 text-gray-200" />
+            <div className="rounded-2xl bg-background p-8 text-center ring-1 ring-border text-muted-foreground">
+              <Coins className="mx-auto mb-3 h-12 w-12 text-muted-foreground opacity-40" />
               <p className="text-sm">暂无积分记录</p>
-              <p className="mt-1 text-xs text-gray-300">参与科普活动即可获取积分</p>
+              <p className="mt-1 text-xs text-muted-foreground opacity-60">参与科普活动即可获取积分</p>
             </div>
           ) : (
             <PointHistory records={pointRecords} />
           )
         ) : (
           activitiesLoading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-              <Loader2 className="mb-3 h-8 w-8 animate-spin text-blue-500" />
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
+              <Loader2 className="mb-3 h-8 w-8 animate-spin text-primary" />
               <p className="text-sm">加载中...</p>
             </div>
           ) : (

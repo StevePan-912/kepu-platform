@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { RESOURCE_CATEGORIES } from '@/lib/constants/categories'
 import type { Resource } from '@/lib/supabase/types'
+import { BookOpen, Search, Headphones, Video, Smartphone, FileText, File, Clock, ChevronRight } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 interface ResourceListProps {
   resources: Resource[]
@@ -16,76 +18,77 @@ function highlightKeyword(text: string, keyword?: string) {
   const parts = text.split(regex)
   return parts.map((part, i) =>
     regex.test(part) ? (
-      <mark key={i} className="bg-yellow-200 text-inherit px-0.5 rounded">{part}</mark>
+      <mark key={i} className="bg-accent text-inherit px-0.5 rounded">{part}</mark>
     ) : part
   )
 }
 
+const typeIcons: Record<string, LucideIcon> = {
+  audio: Headphones,
+  video: Video,
+  ar_model: Smartphone,
+  text: FileText,
+}
+const DefaultIcon = File
+
 export function ResourceList({ resources, keyword }: ResourceListProps) {
   if (resources.length === 0) {
     return (
-      <div className="bg-white rounded-xl p-8 text-center shadow-sm">
-        <div className="text-4xl mb-3">🔍</div>
-        <p className="text-gray-500">暂无相关科普内容</p>
-        <p className="text-sm text-gray-400 mt-1">试试其他关键词吧</p>
+      <div className="bg-background rounded-xl p-8 text-center shadow-sm border border-border">
+        <Search className="h-10 w-10 mx-auto mb-3 text-muted-foreground" />
+        <p className="text-muted-foreground">暂无相关科普内容</p>
+        <p className="text-sm text-muted-foreground mt-1">试试其他关键词吧</p>
       </div>
     )
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-      <div className="px-4 py-3 border-b border-gray-100">
+    <div className="bg-background rounded-xl shadow-sm overflow-hidden border border-border">
+      <div className="px-4 py-3 border-b border-border">
         <div className="flex items-center gap-2">
-          <span className="text-lg">📚</span>
-          <h3 className="font-bold text-gray-900">
+          <BookOpen className="h-5 w-5 text-foreground" />
+          <h3 className="font-bold text-foreground">
             {keyword ? `搜索"${keyword}"的结果` : '为你推荐'}
           </h3>
-          <span className="text-sm text-gray-400">({resources.length})</span>
+          <span className="text-sm text-muted-foreground">({resources.length})</span>
         </div>
       </div>
-      <div className="divide-y divide-gray-50">
+      <div className="divide-y divide-border">
         {resources.map((resource) => {
           const categoryInfo = RESOURCE_CATEGORIES[resource.category as keyof typeof RESOURCE_CATEGORIES]
-          const typeIcon = {
-            audio: '🎧',
-            video: '🎬',
-            ar_model: '📱',
-            text: '📖'
-          }[resource.type ?? ''] || '📄'
+          const TypeIcon = (resource.type ? typeIcons[resource.type] : null) ?? DefaultIcon
 
           return (
             <Link
               key={resource.id}
               href={`/resources/${resource.id}`}
-              className="block px-4 py-3 hover:bg-gray-50 transition-colors"
+              className="block px-4 py-3 hover:bg-muted transition-colors"
             >
               <div className="flex items-start gap-3">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-xl flex-shrink-0">
-                  {typeIcon}
+                <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                  <TypeIcon className="h-5 w-5 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-gray-900 truncate">
+                  <h4 className="font-medium text-foreground truncate">
                     {highlightKeyword(resource.title, keyword)}
                   </h4>
-                  <p className="text-sm text-gray-500 mt-0.5 line-clamp-2">
+                  <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
                     {highlightKeyword(resource.description || '', keyword)}
                   </p>
                   <div className="flex items-center gap-2 mt-2">
-                    <span className={`px-2 py-0.5 text-xs rounded-full ${categoryInfo?.color || 'bg-gray-100 text-gray-600'}`}>
-                      {categoryInfo?.icon} {categoryInfo?.label}
+                    <span className="flex items-center gap-1 px-2 py-0.5 text-xs rounded-full bg-accent text-foreground">
+                      {categoryInfo?.Icon && <categoryInfo.Icon className="h-3 w-3" />}
+                      {categoryInfo?.label}
                     </span>
                     {resource.duration && (
-                      <span className="text-xs text-gray-400">
-                        ⏱️ {Math.ceil(resource.duration / 60)}分钟
+                      <span className="flex items-center gap-0.5 text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3" />
+                        {Math.ceil(resource.duration / 60)}分钟
                       </span>
                     )}
                   </div>
                 </div>
-                <div className="text-gray-300">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
+                <ChevronRight className="h-5 w-5 shrink-0 text-muted-foreground" />
               </div>
             </Link>
           )

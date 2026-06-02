@@ -1,6 +1,8 @@
 'use client'
 
 import { RESOURCE_CATEGORIES } from '@/lib/constants/categories'
+import { MapPin, ChevronRight } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 interface ArModel {
   id: string
@@ -8,7 +10,7 @@ interface ArModel {
   description: string
   category: keyof typeof RESOURCE_CATEGORIES
   modelUrl: string | null
-  thumbnailEmoji: string
+  ThumbnailIcon: LucideIcon
   location?: string
   isNew?: boolean
   narration?: string
@@ -29,46 +31,52 @@ export default function ArModelCard({ model, isActive, onClick }: ArModelCardPro
       className={`
         w-full text-left rounded-2xl p-4 transition-all duration-200 border-2
         ${isActive
-          ? 'border-blue-500 bg-blue-50 shadow-lg shadow-blue-100'
-          : 'border-gray-100 bg-white hover:border-blue-200 hover:shadow-md'
+          ? 'border-primary bg-accent shadow-lg'
+          : 'border-border bg-background hover:border-primary/30 hover:shadow-md'
         }
       `}
     >
       <div className="flex items-start gap-3">
-        {/* 缩略图区域 */}
+        {/* Thumbnail */}
         <div
           className={`
-            w-16 h-16 rounded-xl flex items-center justify-center text-3xl shrink-0
-            ${isActive ? 'bg-blue-100' : 'bg-gray-50'}
+            w-16 h-16 rounded-xl flex items-center justify-center shrink-0
+            ${isActive ? 'bg-primary/10' : 'bg-muted'}
           `}
         >
-          {model.thumbnailEmoji}
+          <model.ThumbnailIcon className={`w-7 h-7 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
         </div>
 
-        {/* 内容区域 */}
+        {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <h3 className={`font-semibold text-sm truncate ${isActive ? 'text-blue-700' : 'text-gray-900'}`}>
+            <h3 className={`font-semibold text-sm truncate ${isActive ? 'text-primary' : 'text-foreground'}`}>
               {model.title}
             </h3>
             {model.isNew && (
-              <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full shrink-0">新</span>
+              <span className="text-xs bg-destructive text-destructive-foreground px-1.5 py-0.5 rounded-full shrink-0">新</span>
             )}
           </div>
-          <p className="text-xs text-gray-500 line-clamp-2 mb-2">{model.description}</p>
+          <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{model.description}</p>
           <div className="flex items-center gap-2">
-            <span className={`text-xs px-2 py-0.5 rounded-full ${categoryInfo.color}`}>
-              {categoryInfo.icon} {categoryInfo.label}
-            </span>
+            {categoryInfo && (
+              <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-accent text-foreground">
+                <categoryInfo.Icon className="h-3 w-3" />
+                {categoryInfo.label}
+              </span>
+            )}
             {model.location && (
-              <span className="text-xs text-gray-400">📍 {model.location}</span>
+              <span className="flex items-center gap-0.5 text-xs text-muted-foreground">
+                <MapPin className="h-3 w-3" />
+                {model.location}
+              </span>
             )}
           </div>
         </div>
 
-        {/* 箭头 */}
-        <div className={`text-lg shrink-0 ${isActive ? 'text-blue-500' : 'text-gray-300'}`}>
-          {isActive ? '▶' : '›'}
+        {/* Arrow */}
+        <div className={`shrink-0 ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+          <ChevronRight className="h-5 w-5" />
         </div>
       </div>
     </button>

@@ -1,13 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Cog, Globe, Database, Clock, Users } from 'lucide-react'
+import { Cog } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
+import { Check } from 'lucide-react'
 
-// Mock 系统配置项
+// Mock system configs
 const systemConfigs = [
   {
     key: 'site_name',
@@ -65,7 +65,6 @@ export function SettingsConfig() {
 
   const handleSave = async () => {
     setSaving(true)
-    // Mock API
     await new Promise(r => setTimeout(r, 800))
     setSaving(false)
     setSaved(true)
@@ -94,7 +93,7 @@ export function SettingsConfig() {
           <select
             value={config.value}
             onChange={e => handleChange(config.key, e.target.value)}
-            className="w-full h-10 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full h-10 px-3 py-2 border border-input rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           >
             {config.options?.map(opt => (
               <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -108,8 +107,8 @@ export function SettingsConfig() {
               onClick={() => handleChange(config.key, 'true')}
               className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                 config.value === 'true'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-accent'
               }`}
             >
               开启
@@ -118,8 +117,8 @@ export function SettingsConfig() {
               onClick={() => handleChange(config.key, 'false')}
               className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                 config.value === 'false'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground hover:bg-accent'
               }`}
             >
               关闭
@@ -142,11 +141,11 @@ export function SettingsConfig() {
       </CardHeader>
       <CardContent className="space-y-6">
         {configs.map(config => (
-          <div key={config.key} className="flex items-start justify-between gap-4 py-3 border-b border-gray-100 last:border-0">
+          <div key={config.key} className="flex items-start justify-between gap-4 py-3 border-b border-border last:border-0">
             <div className="flex-1 min-w-0">
-              <div className="font-medium text-gray-900">{config.label}</div>
+              <div className="font-medium text-foreground">{config.label}</div>
               {config.description && (
-                <div className="text-sm text-gray-500 mt-0.5">{config.description}</div>
+                <div className="text-sm text-muted-foreground mt-0.5">{config.description}</div>
               )}
             </div>
             <div className="w-48 flex-shrink-0">{renderField(config)}</div>
@@ -157,7 +156,12 @@ export function SettingsConfig() {
           <Button onClick={handleSave} disabled={saving}>
             {saving ? '保存中...' : '保存配置'}
           </Button>
-          {saved && <span className="text-sm text-green-600">✓ 配置已保存</span>}
+          {saved && (
+            <span className="text-sm text-success flex items-center gap-1">
+              <Check className="w-3.5 h-3.5" />
+              配置已保存
+            </span>
+          )}
         </div>
       </CardContent>
     </Card>

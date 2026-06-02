@@ -10,10 +10,11 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { PieChart as PieChartIcon } from 'lucide-react'
 import type { UserPreferenceItem } from '@/lib/supabase/admin/types'
 import { getUserPreferences } from '@/lib/supabase/admin/queries'
 
-const COLORS = ['#3b82f6', '#ef4444', '#f59e0b', '#10b981', '#8b5cf6', '#ec4899', '#06b6d4', '#f97316', '#6366f1', '#14b8a6']
+const COLORS = ['#4a6fa5', '#c94a4a', '#c49a3c', '#3b9b7f', '#7c5cbf', '#d4618c', '#2d9ab5', '#d97a32', '#5b6abf', '#2f9e8f']
 
 export function UserPreferenceAnalysis() {
   const [data, setData] = useState<UserPreferenceItem[]>([])
@@ -32,15 +33,18 @@ export function UserPreferenceAnalysis() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">📊 用户偏好分析（近30天）</CardTitle>
+        <CardTitle className="text-base flex items-center gap-2">
+          <PieChartIcon className="w-4 h-4" />
+          用户偏好分析（近30天）
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="h-80 flex items-center justify-center text-gray-400">
+          <div className="h-80 flex items-center justify-center text-muted-foreground">
             加载中...
           </div>
         ) : data.length === 0 ? (
-          <div className="h-80 flex items-center justify-center text-gray-400">
+          <div className="h-80 flex items-center justify-center text-muted-foreground">
             暂无偏好数据
           </div>
         ) : (

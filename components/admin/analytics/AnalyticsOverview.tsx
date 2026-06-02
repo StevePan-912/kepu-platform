@@ -51,29 +51,29 @@ export function AnalyticsOverview({ days = 7 }: AnalyticsOverviewProps) {
       label: '总用户数',
       value: userStats?.totalUsers ?? '—',
       icon: Users,
-      color: 'text-blue-600',
-      bg: 'bg-blue-50',
+      color: 'text-primary',
+      bg: 'bg-accent',
     },
     {
       label: '总资源数',
       value: resourceStats?.total ?? '—',
       icon: BookOpen,
-      color: 'text-green-600',
-      bg: 'bg-green-50',
+      color: 'text-success',
+      bg: 'bg-success/10',
     },
     {
       label: `${days}天活动总数`,
       value: totalActivities,
       icon: Activity,
-      color: 'text-purple-600',
-      bg: 'bg-purple-50',
+      color: 'text-primary',
+      bg: 'bg-accent',
     },
     {
       label: '日均活动量',
       value: avgDailyActivities,
       icon: TrendingUp,
-      color: 'text-orange-600',
-      bg: 'bg-orange-50',
+      color: 'text-warning',
+      bg: 'bg-warning/10',
     },
   ]
 
@@ -83,8 +83,8 @@ export function AnalyticsOverview({ days = 7 }: AnalyticsOverviewProps) {
         {[...Array(4)].map((_, i) => (
           <Card key={i} className="animate-pulse">
             <CardContent className="p-6">
-              <div className="h-4 bg-gray-200 rounded w-1/2 mb-3" />
-              <div className="h-8 bg-gray-200 rounded w-1/3" />
+              <div className="h-4 bg-muted rounded w-1/2 mb-3" />
+              <div className="h-8 bg-muted rounded w-1/3" />
             </CardContent>
           </Card>
         ))}
@@ -100,8 +100,8 @@ export function AnalyticsOverview({ days = 7 }: AnalyticsOverviewProps) {
           <Card key={card.label}>
             <CardContent className="p-6 flex items-start justify-between">
               <div>
-                <p className="text-sm text-gray-500">{card.label}</p>
-                <p className="text-2xl font-bold mt-1">{card.value}</p>
+                <p className="text-sm text-muted-foreground">{card.label}</p>
+                <p className="text-2xl font-bold mt-1 text-foreground">{card.value}</p>
               </div>
               <div className={`p-3 rounded-lg ${card.bg}`}>
                 <Icon className={`w-5 h-5 ${card.color}`} />

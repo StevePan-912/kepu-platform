@@ -5,7 +5,7 @@ import type { Product } from '@/lib/supabase/types'
 import { useUser } from '@/lib/hooks/useUser'
 import { usePoints } from '@/lib/hooks/usePoints'
 import { PointsBanner, ProductGrid, ExchangeModal, ExchangeHistory } from '@/components/mall'
-import { ShoppingBag, History, ChevronRight } from 'lucide-react'
+import { ShoppingBag, History, Coins } from 'lucide-react'
 
 type Tab = 'shop' | 'history'
 
@@ -22,27 +22,27 @@ export default function MallPageClient() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-background pb-24">
       {/* 顶部标题栏 */}
-      <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-gray-100">
+      <div className="sticky top-0 z-30 glass border-b border-border">
         <div className="flex items-center justify-between px-4 py-3">
-          <h1 className="text-lg font-bold text-gray-900">积分商城</h1>
+          <h1 className="text-lg font-bold text-foreground">积分商城</h1>
           {user && (
-            <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-600">
-              <span>🪙</span>
+            <div className="flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-sm font-medium text-primary">
+              <Coins className="h-4 w-4" />
               <span>{totalPoints.toLocaleString()} 积分</span>
             </div>
           )}
         </div>
 
         {/* Tab 切换 */}
-        <div className="flex border-t border-gray-100">
+        <div className="flex border-t border-border">
           <button
             onClick={() => setActiveTab('shop')}
             className={`flex flex-1 items-center justify-center gap-2 py-2.5 text-sm font-medium transition ${
               activeTab === 'shop'
-                ? 'border-b-2 border-emerald-500 text-emerald-600'
-                : 'text-gray-500'
+                ? 'border-b-2 border-primary text-primary'
+                : 'text-muted-foreground'
             }`}
           >
             <ShoppingBag className="h-4 w-4" />
@@ -52,8 +52,8 @@ export default function MallPageClient() {
             onClick={() => setActiveTab('history')}
             className={`flex flex-1 items-center justify-center gap-2 py-2.5 text-sm font-medium transition ${
               activeTab === 'history'
-                ? 'border-b-2 border-emerald-500 text-emerald-600'
-                : 'text-gray-500'
+                ? 'border-b-2 border-primary text-primary'
+                : 'text-muted-foreground'
             }`}
           >
             <History className="h-4 w-4" />
@@ -70,8 +70,8 @@ export default function MallPageClient() {
 
         {/* 积分获取入口 */}
         {!user && (
-          <div className="mb-4 rounded-xl bg-amber-50 border border-amber-100 p-3">
-            <p className="text-sm text-amber-700 font-medium">如何获取积分？</p>
+          <div className="mb-4 rounded-xl border border-border bg-accent p-3">
+            <p className="text-sm font-medium text-foreground">如何获取积分？</p>
             <div className="mt-2 space-y-1.5">
               {[
                 { action: '播放科普音频', points: '+10' },
@@ -80,8 +80,8 @@ export default function MallPageClient() {
                 { action: '提交反馈意见', points: '+15' },
               ].map(item => (
                 <div key={item.action} className="flex items-center justify-between text-xs">
-                  <span className="text-amber-600">{item.action}</span>
-                  <span className="font-semibold text-amber-700">{item.points}</span>
+                  <span className="text-muted-foreground">{item.action}</span>
+                  <span className="font-semibold text-primary">{item.points}</span>
                 </div>
               ))}
             </div>

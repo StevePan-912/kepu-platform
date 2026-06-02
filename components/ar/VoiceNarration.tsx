@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { Volume2, Square, Play } from 'lucide-react'
 
 interface VoiceNarrationProps {
   text: string
@@ -88,19 +89,19 @@ export default function VoiceNarration({ text, title }: VoiceNarrationProps) {
 
   if (!supported) {
     return (
-      <div className="bg-gray-50 rounded-xl p-3 text-center text-xs text-gray-400">
+      <div className="bg-muted rounded-xl p-3 text-center text-xs text-muted-foreground">
         当前浏览器不支持语音朗读
       </div>
     )
   }
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4">
+    <div className="bg-accent rounded-2xl p-4">
       {/* 标题 */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <span className="text-lg">🔊</span>
-          <span className="text-sm font-semibold text-blue-700">
+          <Volume2 className="h-5 w-5 text-primary" />
+          <span className="text-sm font-semibold text-foreground">
             {title ? `${title} — 语音讲解` : '语音讲解'}
           </span>
         </div>
@@ -109,18 +110,18 @@ export default function VoiceNarration({ text, title }: VoiceNarrationProps) {
           className={`
             flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all
             ${isPlaying
-              ? 'bg-red-100 text-red-600 hover:bg-red-200'
-              : 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm'
+              ? 'bg-destructive/10 text-destructive hover:bg-destructive/20'
+              : 'bg-primary text-white hover:bg-primary/90 shadow-sm'
             }
           `}
         >
           {isPlaying ? (
             <>
-              <span className="animate-pulse">■</span> 停止
+              <Square className="h-3 w-3" /> 停止
             </>
           ) : (
             <>
-              <span>▶</span> 播放
+              <Play className="h-3 w-3" /> 播放
             </>
           )}
         </button>
@@ -129,9 +130,9 @@ export default function VoiceNarration({ text, title }: VoiceNarrationProps) {
       {/* 进度条 */}
       {isPlaying && (
         <div className="mb-3">
-          <div className="bg-blue-100 rounded-full h-1.5 overflow-hidden">
+          <div className="bg-muted rounded-full h-1.5 overflow-hidden">
             <div
-              className="bg-blue-500 h-1.5 rounded-full transition-all duration-200"
+              className="bg-primary h-1.5 rounded-full transition-all duration-200"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -139,7 +140,7 @@ export default function VoiceNarration({ text, title }: VoiceNarrationProps) {
       )}
 
       {/* 讲解文本预览 */}
-      <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
+      <p className="text-xs text-muted-foreground leading-relaxed line-clamp-3">
         {text}
       </p>
     </div>

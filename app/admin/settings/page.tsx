@@ -6,16 +6,19 @@ export const dynamic = 'force-dynamic'
 
 export default function SettingsPage() {
   return (
-    <div className="space-y-6 p-4 md:p-6">
-      {/* 页面标题 */}
+    <div className="space-y-6 p-6 md:p-8">
+      {/* Page title */}
       <div>
-        <h1 className="text-2xl font-bold">⚙️ 系统设置</h1>
-        <p className="text-gray-500 text-sm mt-1">
+        <h1 className="text-2xl font-semibold text-foreground flex items-center gap-2">
+          <Settings className="w-6 h-6" />
+          系统设置
+        </h1>
+        <p className="text-muted-foreground text-sm mt-1">
           个人信息 · 通知偏好 · 安全设置 · 系统参数
         </p>
       </div>
 
-      {/* Tabs 切换 */}
+      {/* Tabs */}
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList className="grid w-full grid-cols-5 max-w-2xl">
           <TabsTrigger value="profile" className="flex items-center gap-1.5">

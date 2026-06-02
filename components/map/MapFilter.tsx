@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { DEVICE_TYPES, DEVICE_STATUS } from '@/lib/constants/categories'
 import type { Device } from '@/lib/supabase/types'
+import { Headphones, Monitor, Smartphone, Star, Filter, ChevronDown, ChevronUp } from 'lucide-react'
 
 interface MapFilterProps {
   devices: Device[]
@@ -12,11 +13,11 @@ interface MapFilterProps {
 const ALL_TYPES = Object.keys(DEVICE_TYPES) as string[]
 const ALL_STATUSES = Object.keys(DEVICE_STATUS) as string[]
 
-const TYPE_EMOJI: Record<string, string> = {
-  audio_station: '🔊',
-  screen: '📺',
-  ar_point: '🔮',
-  star_corner: '⭐',
+const TYPE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  audio_station: Headphones,
+  screen: Monitor,
+  ar_point: Smartphone,
+  star_corner: Star,
 }
 
 export default function MapFilter({ devices, onFilterChange }: MapFilterProps) {
@@ -50,52 +51,61 @@ export default function MapFilter({ devices, onFilterChange }: MapFilterProps) {
 
   return (
     <div className="absolute top-4 left-4 z-[1000]">
-      {/* 统计徽章 */}
-      <div className="bg-white rounded-2xl shadow-lg px-3 py-2 mb-2 flex items-center gap-2">
-        <span className="text-green-600 font-bold text-sm">{onlineCount}</span>
-        <span className="text-gray-400 text-xs">/ {totalCount} 在线</span>
+      {/* Stats badge */}
+      <div className="glass rounded-2xl shadow-sm px-3 py-2 mb-2 flex items-center gap-2 ring-1 ring-border">
+        <span className="text-success font-bold text-sm">{onlineCount}</span>
+        <span className="text-muted-foreground text-xs">/ {totalCount} 在线</span>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="ml-2 text-gray-500 hover:text-gray-700 text-xs flex items-center gap-1"
+          className="ml-2 text-muted-foreground hover:text-foreground text-xs flex items-center gap-1 transition-colors"
         >
-          筛选 {isOpen ? '▲' : '▼'}
+          <Filter className="w-3 h-3" />
+          {isOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         </button>
       </div>
 
-      {/* 筛选面板 */}
+      {/* Filter panel */}
       {isOpen && (
-        <div className="bg-white rounded-2xl shadow-xl p-4 w-52 space-y-3">
+        <div className="glass rounded-2xl shadow-md p-4 w-56 space-y-3 ring-1 ring-border">
           <div>
-            <p className="text-xs font-semibold text-gray-500 mb-2">设备类型</p>
+            <p className="text-xs font-medium text-muted-foreground mb-2">设备类型</p>
             <div className="space-y-1.5">
-              {ALL_TYPES.map((type) => (
-                <label key={type} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={selectedTypes.has(type)}
-                    onChange={() => toggleType(type)}
-                    className="rounded accent-green-600"
-                  />
-                  <span className="text-sm">{TYPE_EMOJI[type]} {(DEVICE_TYPES as Record<string, any>)[type].label}</span>
-                </label>
-              ))}
+              {ALL_TYPES.map((type) => {
+                const Icon = TYPE_ICONS[type]
+                const typeInfo = DEVICE_TYPES[type]
+                return (
+                  <label key={type} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedTypes.has(type)}
+                      onChange={() => toggleType(type)}
+                      className="rounded accent-primary"
+                    />
+                    {Icon && <Icon className="w-3.5 h-3.5 text-muted-foreground" />}
+                    <span className="text-sm text-foreground">{typeInfo?.label}</span>
+                  </label>
+                )
+              })}
             </div>
           </div>
 
-          <div className="border-t pt-3">
-            <p className="text-xs font-semibold text-gray-500 mb-2">设备状态</p>
+          <div className="border-t border-border pt-3">
+            <p className="text-xs font-medium text-muted-foreground mb-2">设备状态</p>
             <div className="space-y-1.5">
-              {ALL_STATUSES.map((status) => (
-                <label key={status} className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={selectedStatus.has(status)}
-                    onChange={() => toggleStatus(status)}
-                    className="rounded accent-green-600"
-                  />
-                  <span className="text-sm">{(DEVICE_STATUS as Record<string, any>)[status].label}</span>
-                </label>
-              ))}
+              {ALL_STATUSES.map((status) => {
+                const statusInfo = DEVICE_STATUS[status]
+                return (
+                  <label key={status} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedStatus.has(status)}
+                      onChange={() => toggleStatus(status)}
+                      className="rounded accent-primary"
+                    />
+                    <span className="text-sm text-foreground">{statusInfo?.label}</span>
+                  </label>
+                )
+              })}
             </div>
           </div>
         </div>

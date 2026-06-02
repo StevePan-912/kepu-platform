@@ -18,15 +18,15 @@ export default function PointsBanner({ onLoginDemo }: PointsBannerProps) {
   }
 
   const honorLabels = {
-    explorer: { label: '探索者', color: 'text-green-400', bg: 'bg-green-400/20' },
-    communicator: { label: '传播者', color: 'text-blue-400', bg: 'bg-blue-400/20' },
-    leader: { label: '领航者', color: 'text-yellow-400', bg: 'bg-yellow-400/20' },
+    explorer: { label: '探索者', color: 'text-success' },
+    communicator: { label: '传播者', color: 'text-primary' },
+    leader: { label: '领航者', color: 'text-warning' },
   }
 
-  const honor = user?.honor_level ? (honorLabels as Record<string, { label: string; color: string; bg: string }>)[user.honor_level] : null
+  const honor = user?.honor_level ? (honorLabels as Record<string, { label: string; color: string }>)[user.honor_level] : null
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 p-5 text-white shadow-lg">
+    <div className="relative overflow-hidden rounded-2xl bg-primary p-5 text-white shadow-lg">
       {/* 背景装饰 */}
       <div className="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10" />
       <div className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-white/5" />
@@ -38,7 +38,7 @@ export default function PointsBanner({ onLoginDemo }: PointsBannerProps) {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-white/80">你好，{user.nickname || '居民'}</span>
                 {honor && (
-                  <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${honor.bg} ${honor.color}`}>
+                  <span className={`rounded-full bg-white/20 px-2 py-0.5 text-xs font-medium ${honor.color}`}>
                     {honor.label}
                   </span>
                 )}
@@ -49,7 +49,7 @@ export default function PointsBanner({ onLoginDemo }: PointsBannerProps) {
               </div>
             </div>
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20">
-              <Coins className="h-8 w-8 text-yellow-300" />
+              <Coins className="h-8 w-8 text-white" />
             </div>
           </div>
 

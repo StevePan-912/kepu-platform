@@ -9,6 +9,7 @@ import {
   Heart,
   BookOpen,
   Users,
+  Atom,
 } from 'lucide-react'
 
 const techStack = [
@@ -34,7 +35,7 @@ const teamMembers = [
 export function SettingsAbout() {
   return (
     <div className="space-y-6">
-      {/* 项目信息 */}
+      {/* Project info */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -44,35 +45,35 @@ export function SettingsAbout() {
           <CardDescription>智慧科普阵地管理平台</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Logo & 版本 */}
+          {/* Logo & version */}
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-3xl">
-              🌟
+            <div className="w-16 h-16 rounded-2xl bg-primary flex items-center justify-center">
+              <Atom className="w-8 h-8 text-primary-foreground" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900">科普漫步</h2>
-              <p className="text-sm text-gray-500">智慧科普阵地管理平台</p>
-              <Badge className="mt-1.5 bg-blue-100 text-blue-700 hover:bg-blue-100">
+              <h2 className="text-xl font-semibold text-foreground">科普漫步</h2>
+              <p className="text-sm text-muted-foreground">智慧科普阵地管理平台</p>
+              <Badge variant="secondary" className="mt-1.5">
                 版本 1.0.0
               </Badge>
             </div>
           </div>
 
-          {/* 项目描述 */}
-          <div className="prose prose-sm max-w-none text-gray-600">
+          {/* Project description */}
+          <div className="text-sm text-muted-foreground leading-relaxed">
             <p>
               科普漫步是一个智慧科普阵地管理平台，旨在通过数字化手段提升科普设施的管理效率，
               为居民提供丰富的科普互动体验。平台涵盖设施监控、数据分析、智能决策等核心功能模块。
             </p>
           </div>
 
-          {/* 链接 */}
+          {/* Links */}
           <div className="flex gap-3">
             <a
               href="https://github.com/StevePan-912/kepu-platform"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3 py-2 text-sm font-medium border border-border rounded-lg hover:bg-accent transition-colors text-foreground"
             >
               <ExternalLink className="w-4 h-4" />
               源代码
@@ -85,7 +86,7 @@ export function SettingsAbout() {
         </CardContent>
       </Card>
 
-      {/* 技术栈 */}
+      {/* Tech stack */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base">技术栈</CardTitle>
@@ -93,16 +94,16 @@ export function SettingsAbout() {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {techStack.map(tech => (
-              <div key={tech.name} className="p-3 border rounded-lg text-center hover:bg-gray-50 transition-colors">
-                <div className="font-medium text-sm text-gray-900">{tech.name}</div>
-                <div className="text-xs text-gray-500 mt-0.5">{tech.description}</div>
+              <div key={tech.name} className="p-3 rounded-lg border border-border text-center hover:bg-accent transition-colors">
+                <div className="font-medium text-sm text-foreground">{tech.name}</div>
+                <div className="text-xs text-muted-foreground mt-0.5">{tech.description}</div>
               </div>
             ))}
           </div>
         </CardContent>
       </Card>
 
-      {/* 开发团队 */}
+      {/* Team */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
@@ -113,10 +114,10 @@ export function SettingsAbout() {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {teamMembers.map(m => (
-              <div key={m.role} className="flex items-center justify-between p-3 border rounded-lg">
+              <div key={m.role} className="flex items-center justify-between p-3 rounded-lg border border-border">
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary">{m.role}</Badge>
-                  <span className="text-sm text-gray-600">{m.responsibility}</span>
+                  <span className="text-sm text-muted-foreground">{m.responsibility}</span>
                 </div>
               </div>
             ))}
@@ -124,7 +125,7 @@ export function SettingsAbout() {
         </CardContent>
       </Card>
 
-      {/* 系统状态 */}
+      {/* System status */}
       <Card>
         <CardHeader>
           <CardTitle className="text-base">系统状态</CardTitle>
@@ -132,29 +133,29 @@ export function SettingsAbout() {
         <CardContent>
           <div className="space-y-3 text-sm">
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">前端框架</span>
-              <Badge className="bg-green-100 text-green-700 hover:bg-green-100">运行中</Badge>
+              <span className="text-muted-foreground">前端框架</span>
+              <Badge className="bg-success/10 text-success hover:bg-success/10">运行中</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">数据库（Supabase）</span>
-              <Badge className="bg-green-100 text-green-700 hover:bg-green-100">已连接</Badge>
+              <span className="text-muted-foreground">数据库（Supabase）</span>
+              <Badge className="bg-success/10 text-success hover:bg-success/10">已连接</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">地图服务（Leaflet）</span>
-              <Badge className="bg-green-100 text-green-700 hover:bg-green-100">正常</Badge>
+              <span className="text-muted-foreground">地图服务（Leaflet）</span>
+              <Badge className="bg-success/10 text-success hover:bg-success/10">正常</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">部署环境</span>
-              <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100">Vercel Production</Badge>
+              <span className="text-muted-foreground">部署环境</span>
+              <Badge variant="secondary">Vercel Production</Badge>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* 版权 */}
-      <div className="text-center text-xs text-gray-400 pt-2">
+      {/* Copyright */}
+      <div className="text-center text-xs text-muted-foreground pt-2">
         <p className="flex items-center justify-center gap-1">
-          Made with <Heart className="w-3 h-3 text-red-400" /> by 科普漫步团队
+          Made with <Heart className="w-3 h-3 text-destructive" /> by 科普漫步团队
         </p>
         <p className="mt-0.5">© 2026 科普漫步. All rights reserved.</p>
       </div>

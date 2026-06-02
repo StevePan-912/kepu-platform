@@ -10,6 +10,7 @@ import {
   Settings,
   LogOut,
   Menu,
+  Atom,
 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -48,12 +49,12 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
   const NavContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="p-4 border-b">
+      <div className="p-4 border-b border-border">
         <Link href="/admin" className="flex items-center gap-2">
-          <span className="text-2xl">🌟</span>
+          <Atom className="w-7 h-7 text-primary" />
           <div>
-            <span className="font-bold text-gray-900">科普漫步</span>
-            <span className="block text-xs text-gray-500">管理后台</span>
+            <span className="font-bold text-foreground">科普漫步</span>
+            <span className="block text-xs text-muted-foreground">管理后台</span>
           </div>
         </Link>
       </div>
@@ -69,8 +70,8 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
               href={item.href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
                 isActive
-                  ? 'bg-blue-50 text-blue-600 font-medium'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  ? 'bg-accent text-primary font-medium'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               }`}
             >
               <Icon className="w-5 h-5" />
@@ -81,15 +82,15 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
       </nav>
 
       {/* Bottom Actions */}
-      <div className="p-4 border-t space-y-1">
+      <div className="p-4 border-t border-border space-y-1">
         <Link
           href="/admin/settings"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         >
           <Settings className="w-5 h-5" />
           <span>系统设置</span>
         </Link>
-        <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors w-full">
+        <button className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground transition-colors w-full">
           <LogOut className="w-5 h-5" />
           <span>退出登录</span>
         </button>
@@ -101,14 +102,14 @@ export function AdminSidebar({ className }: AdminSidebarProps) {
     <>
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-white border-r ${className || ''}`}
+        className={`hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 bg-background border-r border-border ${className || ''}`}
       >
         <NavContent />
       </aside>
 
       {/* Mobile Sheet */}
       <Sheet>
-        <SheetTrigger className="lg:hidden fixed top-4 left-4 z-50 inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors">
+        <SheetTrigger className="lg:hidden fixed top-4 left-4 z-50 inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-muted transition-colors">
           <Menu className="w-5 h-5" />
         </SheetTrigger>
         <SheetContent side="left" className="w-64 p-0">

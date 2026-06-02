@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Brain, PartyPopper, BookOpen, MapPin } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
@@ -50,25 +51,34 @@ export function DecisionGenerator({ onCreated }: { onCreated?: () => void }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-base">🧠 AI 智能生成决策建议</CardTitle>
+        <CardTitle className="text-base flex items-center gap-2">
+          <Brain className="w-5 h-5 text-primary" />
+          AI 智能生成决策建议
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-sm font-medium">建议类型</label>
+            <label className="text-sm font-medium text-foreground">建议类型</label>
             <Select value={type} onValueChange={(v) => setType(v || 'activity')}>
               <SelectTrigger className="mt-1">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="activity">🎪 活动类</SelectItem>
-                <SelectItem value="content">📚 内容类</SelectItem>
-                <SelectItem value="location">📍 位置类</SelectItem>
+                <SelectItem value="activity">
+                  <span className="flex items-center gap-2"><PartyPopper className="w-4 h-4" /> 活动类</span>
+                </SelectItem>
+                <SelectItem value="content">
+                  <span className="flex items-center gap-2"><BookOpen className="w-4 h-4" /> 内容类</span>
+                </SelectItem>
+                <SelectItem value="location">
+                  <span className="flex items-center gap-2"><MapPin className="w-4 h-4" /> 位置类</span>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div>
-            <label className="text-sm font-medium">优先级 (1-10)</label>
+            <label className="text-sm font-medium text-foreground">优先级 (1-10)</label>
             <Select value={String(priority)} onValueChange={v => setPriority(Number(v))}>
               <SelectTrigger className="mt-1">
                 <SelectValue />
@@ -85,29 +95,29 @@ export function DecisionGenerator({ onCreated }: { onCreated?: () => void }) {
         </div>
 
         <div>
-          <label className="text-sm font-medium">决策目标 / 描述</label>
+          <label className="text-sm font-medium text-foreground">决策目标 / 描述</label>
           <textarea
             value={goal}
             onChange={e => setGoal(e.target.value)}
             placeholder="描述你希望分析的决策目标，例如：如何提升周末用户活跃度？"
-            className="mt-1 w-full border rounded-md px-3 py-2 text-sm min-h-[80px] resize-y"
+            className="mt-1 w-full border border-border rounded-md px-3 py-2 text-sm min-h-[80px] resize-y bg-background text-foreground"
             rows={3}
           />
         </div>
 
         {message && (
           <div className={`text-sm p-3 rounded-lg ${
-            message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+            message.type === 'success' ? 'bg-success/10 text-success' : 'bg-destructive/10 text-destructive'
           }`}>
             {message.text}
           </div>
         )}
 
-        <Button onClick={handleGenerate} disabled={loading || !goal.trim()}>
-          {loading ? '生成中...' : '🧠 生成建议'}
+        <Button onClick={handleGenerate} disabled={loading || !goal.trim()} className="bg-primary text-primary-foreground">
+          {loading ? '生成中...' : '生成建议'}
         </Button>
 
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-muted-foreground">
           * 当前为 Mock 模式，AI 功能接入后此处将调用真实 AI API 生成建议。
         </p>
       </CardContent>

@@ -17,7 +17,6 @@ import {
   Clock,
   Activity,
   Settings,
-  History,
   AlertCircle,
   RefreshCw,
 } from 'lucide-react'
@@ -38,9 +37,9 @@ const deviceTypeLabels: Record<string, string> = {
 }
 
 const statusConfig: Record<string, { label: string; color: string; bgColor: string; badgeVariant: 'default' | 'destructive' | 'secondary' }> = {
-  online: { label: '在线', color: 'text-green-600', bgColor: 'bg-green-50', badgeVariant: 'default' },
-  offline: { label: '离线', color: 'text-red-600', bgColor: 'bg-red-50', badgeVariant: 'destructive' },
-  maintenance: { label: '维护中', color: 'text-yellow-600', bgColor: 'bg-yellow-50', badgeVariant: 'secondary' },
+  online: { label: '在线', color: 'text-success', bgColor: 'bg-success/10', badgeVariant: 'default' },
+  offline: { label: '离线', color: 'text-destructive', bgColor: 'bg-destructive/10', badgeVariant: 'destructive' },
+  maintenance: { label: '维护中', color: 'text-warning', bgColor: 'bg-warning/10', badgeVariant: 'secondary' },
 }
 
 function formatLastActive(dateString: string): string {
@@ -79,21 +78,21 @@ export default function DeviceDetailPage() {
     if (deviceId) fetchDevice()
   }, [deviceId])
 
-  // 加载中骨架
+  // Loading skeleton
   if (loading) {
     return (
       <div>
-        <div className="p-4 lg:p-6 border-b bg-white">
+        <div className="p-4 lg:p-6 border-b bg-card">
           <div className="flex items-center gap-4">
             <Link
               href="/admin/facilities"
-              className="inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-accent transition-colors"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5 text-muted-foreground" />
             </Link>
             <div className="flex-1 space-y-2">
-              <div className="h-6 w-48 bg-gray-100 rounded animate-pulse" />
-              <div className="h-4 w-32 bg-gray-100 rounded animate-pulse" />
+              <div className="h-6 w-48 bg-muted rounded animate-pulse" />
+              <div className="h-4 w-32 bg-muted rounded animate-pulse" />
             </div>
           </div>
         </div>
@@ -102,8 +101,8 @@ export default function DeviceDetailPage() {
             {Array.from({ length: 4 }).map((_, i) => (
               <Card key={i}>
                 <CardContent className="pt-6">
-                  <div className="h-8 bg-gray-100 rounded animate-pulse mb-2" />
-                  <div className="h-4 w-16 bg-gray-100 rounded animate-pulse" />
+                  <div className="h-8 bg-muted rounded animate-pulse mb-2" />
+                  <div className="h-4 w-16 bg-muted rounded animate-pulse" />
                 </CardContent>
               </Card>
             ))}
@@ -113,25 +112,25 @@ export default function DeviceDetailPage() {
     )
   }
 
-  // 错误状态
+  // Error state
   if (error || !device) {
     return (
       <div>
-        <div className="p-4 lg:p-6 border-b bg-white">
+        <div className="p-4 lg:p-6 border-b bg-card">
           <Link
             href="/admin/facilities"
-            className="inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors"
+            className="inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-accent transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5 text-muted-foreground" />
           </Link>
         </div>
         <div className="p-4 lg:p-6">
-          <div className="flex flex-col items-center justify-center py-16 text-gray-500">
-            <AlertCircle className="w-12 h-12 mb-4 text-red-400" />
-            <p className="text-lg font-medium mb-2">
+          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
+            <AlertCircle className="w-12 h-12 mb-4 text-destructive" />
+            <p className="text-lg font-medium text-foreground mb-2">
               {error ? '设备数据加载失败' : '设备不存在'}
             </p>
-            {error && <p className="text-sm text-gray-400 mb-4">{error}</p>}
+            {error && <p className="text-sm text-muted-foreground mb-4">{error}</p>}
             <div className="flex gap-3">
               <Button variant="outline" onClick={fetchDevice}>
                 <RefreshCw className="w-4 h-4 mr-2" />
@@ -139,7 +138,7 @@ export default function DeviceDetailPage() {
               </Button>
               <Link
                 href="/admin/facilities"
-                className="inline-flex items-center px-4 h-9 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors text-sm font-medium"
+                className="inline-flex items-center px-4 h-9 rounded-lg border border-border hover:bg-accent transition-colors text-sm font-medium text-foreground"
               >
                 返回设备列表
               </Link>
@@ -156,32 +155,32 @@ export default function DeviceDetailPage() {
   return (
     <div>
       {/* Header */}
-      <div className="p-4 lg:p-6 border-b bg-white">
+      <div className="p-4 lg:p-6 border-b bg-card">
         <div className="flex items-center gap-4">
           <Link
             href="/admin/facilities"
-            className="inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 transition-colors"
+            className="inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-accent transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5 text-muted-foreground" />
           </Link>
           <div className="flex-1">
             <div className="flex items-center gap-3">
-              <TypeIcon className="w-6 h-6 text-gray-600" />
-              <h1 className="text-xl font-semibold">{device.name}</h1>
+              <TypeIcon className="w-6 h-6 text-muted-foreground" />
+              <h1 className="text-xl font-semibold text-foreground">{device.name}</h1>
               <Badge variant={statusInfo.badgeVariant}>
                 <span
                   className={`w-2 h-2 rounded-full mr-1 ${
                     device.status === 'online'
-                      ? 'bg-green-500'
+                      ? 'bg-success'
                       : device.status === 'offline'
-                      ? 'bg-red-500'
-                      : 'bg-yellow-500'
+                      ? 'bg-destructive'
+                      : 'bg-warning'
                   }`}
                 />
                 {statusInfo.label}
               </Badge>
             </div>
-            <p className="text-sm text-gray-500 mt-1">{device.address ?? '—'}</p>
+            <p className="text-sm text-muted-foreground mt-1">{device.address ?? '—'}</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" size="sm">
@@ -197,24 +196,24 @@ export default function DeviceDetailPage() {
       </div>
 
       <div className="p-4 lg:p-6 space-y-6">
-        {/* 统计卡 */}
+        {/* Stat cards */}
         <div className="grid gap-4 md:grid-cols-4">
-          {/* 电量 */}
+          {/* Battery */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">电池电量</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">电池电量</CardTitle>
               <Battery
                 className={`w-5 h-5 ${
-                  (device.battery_level ?? 100) < 20 ? 'text-red-500' : 'text-green-500'
+                  (device.battery_level ?? 100) < 20 ? 'text-destructive' : 'text-success'
                 }`}
               />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{device.battery_level ?? '—'}%</div>
-              <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+              <div className="text-2xl font-bold text-foreground">{device.battery_level ?? '—'}%</div>
+              <div className="w-full bg-muted rounded-full h-2 mt-2">
                 <div
                   className={`h-2 rounded-full transition-all ${
-                    (device.battery_level ?? 100) < 20 ? 'bg-red-500' : 'bg-green-500'
+                    (device.battery_level ?? 100) < 20 ? 'bg-destructive' : 'bg-success'
                   }`}
                   style={{ width: `${device.battery_level ?? 0}%` }}
                 />
@@ -222,31 +221,31 @@ export default function DeviceDetailPage() {
             </CardContent>
           </Card>
 
-          {/* 设备类型 */}
+          {/* Device type */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">设备类型</CardTitle>
-              <TypeIcon className="w-5 h-5 text-blue-600" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">设备类型</CardTitle>
+              <TypeIcon className="w-5 h-5 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-lg font-bold">
+              <div className="text-lg font-bold text-foreground">
                 {deviceTypeLabels[device.type] ?? device.type}
               </div>
-              <p className="text-xs text-gray-400 mt-1">设备分类</p>
+              <p className="text-xs text-muted-foreground mt-1">设备分类</p>
             </CardContent>
           </Card>
 
-          {/* 最后活跃 */}
+          {/* Last active */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">最后活跃</CardTitle>
-              <Clock className="w-5 h-5 text-purple-600" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">最后活跃</CardTitle>
+              <Clock className="w-5 h-5 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-lg font-bold">
+              <div className="text-lg font-bold text-foreground">
                 {device.last_active ? formatLastActive(device.last_active) : '—'}
               </div>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 {device.last_active
                   ? new Date(device.last_active).toLocaleString('zh-CN')
                   : ''}
@@ -254,24 +253,24 @@ export default function DeviceDetailPage() {
             </CardContent>
           </Card>
 
-          {/* 安装时间 */}
+          {/* Install date */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-500">安装时间</CardTitle>
-              <Activity className="w-5 h-5 text-gray-400" />
+              <CardTitle className="text-sm font-medium text-muted-foreground">安装时间</CardTitle>
+              <Activity className="w-5 h-5 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-lg font-bold">
+              <div className="text-lg font-bold text-foreground">
                 {device.created_at
                   ? new Date(device.created_at).toLocaleDateString('zh-CN')
                   : '—'}
               </div>
-              <p className="text-xs text-gray-400 mt-1">设备注册日期</p>
+              <p className="text-xs text-muted-foreground mt-1">设备注册日期</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* 设备信息 */}
+        {/* Device info */}
         <Card>
           <CardHeader>
             <CardTitle>设备信息</CardTitle>
@@ -280,34 +279,34 @@ export default function DeviceDetailPage() {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               <div>
-                <p className="text-sm text-gray-500">设备ID</p>
-                <p className="font-medium font-mono text-sm break-all">{device.id}</p>
+                <p className="text-sm text-muted-foreground">设备ID</p>
+                <p className="font-medium font-mono text-sm break-all text-foreground">{device.id}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">设备名称</p>
-                <p className="font-medium">{device.name}</p>
+                <p className="text-sm text-muted-foreground">设备名称</p>
+                <p className="font-medium text-foreground">{device.name}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">设备类型</p>
-                <p className="font-medium">{deviceTypeLabels[device.type] ?? device.type}</p>
+                <p className="text-sm text-muted-foreground">设备类型</p>
+                <p className="font-medium text-foreground">{deviceTypeLabels[device.type] ?? device.type}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">当前状态</p>
+                <p className="text-sm text-muted-foreground">当前状态</p>
                 <p className={`font-medium ${statusInfo.color}`}>{statusInfo.label}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">电量</p>
+                <p className="text-sm text-muted-foreground">电量</p>
                 <p
-                  className={`font-medium ${
-                    (device.battery_level ?? 100) < 20 ? 'text-red-500' : ''
+                  className={`font-medium text-foreground ${
+                    (device.battery_level ?? 100) < 20 ? 'text-destructive' : ''
                   }`}
                 >
                   {device.battery_level ?? '—'}%
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-500">安装日期</p>
-                <p className="font-medium">
+                <p className="text-sm text-muted-foreground">安装日期</p>
+                <p className="font-medium text-foreground">
                   {device.created_at
                     ? new Date(device.created_at).toLocaleDateString('zh-CN')
                     : '—'}
@@ -315,16 +314,16 @@ export default function DeviceDetailPage() {
               </div>
             </div>
 
-            {/* 位置信息 */}
+            {/* Location */}
             {(device.address || device.latitude || device.longitude) && (
-              <div className="pt-4 mt-4 border-t">
-                <p className="text-sm text-gray-500 mb-2">地理位置</p>
+              <div className="pt-4 mt-4 border-t border-border">
+                <p className="text-sm text-muted-foreground mb-2">地理位置</p>
                 <div className="flex items-center gap-2 mb-1">
-                  <MapPin className="w-4 h-4 text-gray-400" />
-                  <span>{device.address ?? '未知位置'}</span>
+                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-foreground">{device.address ?? '未知位置'}</span>
                 </div>
                 {(device.latitude || device.longitude) && (
-                  <div className="flex items-center gap-4 text-sm text-gray-500 ml-6">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground ml-6">
                     {device.latitude && <span>纬度: {device.latitude}</span>}
                     {device.longitude && <span>经度: {device.longitude}</span>}
                   </div>

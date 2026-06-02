@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, Mail, Phone, Building } from 'lucide-react'
+import { User, Mail, Phone, Building, Check } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -23,7 +23,6 @@ export function SettingsProfile() {
 
   const handleSave = async () => {
     setSaving(true)
-    // Mock API 调用
     await new Promise(r => setTimeout(r, 800))
     setSaving(false)
     setSaved(true)
@@ -40,20 +39,20 @@ export function SettingsProfile() {
         <CardDescription>管理您的个人账户信息</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* 头像 */}
+        {/* Avatar */}
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold">
+          <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center text-primary text-2xl font-semibold">
             {form.name.charAt(0)}
           </div>
           <Button variant="outline" size="sm">更换头像</Button>
         </div>
 
-        {/* 表单 */}
+        {/* Form */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700">姓名</label>
+            <label className="text-sm font-medium text-foreground">姓名</label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 value={form.name}
                 onChange={e => handleChange('name', e.target.value)}
@@ -62,9 +61,9 @@ export function SettingsProfile() {
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700">邮箱</label>
+            <label className="text-sm font-medium text-foreground">邮箱</label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 value={form.email}
                 onChange={e => handleChange('email', e.target.value)}
@@ -74,9 +73,9 @@ export function SettingsProfile() {
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700">手机号</label>
+            <label className="text-sm font-medium text-foreground">手机号</label>
             <div className="relative">
-              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 value={form.phone}
                 onChange={e => handleChange('phone', e.target.value)}
@@ -85,9 +84,9 @@ export function SettingsProfile() {
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-gray-700">部门</label>
+            <label className="text-sm font-medium text-foreground">部门</label>
             <div className="relative">
-              <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 value={form.department}
                 onChange={e => handleChange('department', e.target.value)}
@@ -97,12 +96,17 @@ export function SettingsProfile() {
           </div>
         </div>
 
-        {/* 保存按钮 */}
+        {/* Save */}
         <div className="flex items-center gap-3 pt-2">
           <Button onClick={handleSave} disabled={saving}>
             {saving ? '保存中...' : '保存修改'}
           </Button>
-          {saved && <span className="text-sm text-green-600">✓ 保存成功</span>}
+          {saved && (
+            <span className="text-sm text-success flex items-center gap-1">
+              <Check className="w-3.5 h-3.5" />
+              保存成功
+            </span>
+          )}
         </div>
       </CardContent>
     </Card>
