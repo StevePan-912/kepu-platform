@@ -9,7 +9,7 @@ import { useAppStore } from '@/lib/store'
 import { useRouter } from 'next/navigation'
 
 // 默认中心坐标（北京展览路街道）
-const DEFAULT_CENTER: [number, number] = [39.934, 116.341]
+const DEFAULT_CENTER: [number, number] = [39.9355, 116.3385]
 const DEFAULT_ZOOM = 15
 
 interface Props {

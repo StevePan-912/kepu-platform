@@ -90,7 +90,7 @@ export default function DeviceMapInner() {
 
   const mappableDevices = devices.filter((d) => d.latitude && d.longitude)
 
-  const defaultCenter: [number, number] = [39.934, 116.341]
+  const defaultCenter: [number, number] = [39.9355, 116.3385]
 
   return (
     <Card>

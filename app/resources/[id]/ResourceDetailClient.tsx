@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import type { Resource } from '@/lib/supabase/types'
 import { getResourceById, getResources } from '@/lib/supabase/queries'
 import { useUser } from '@/lib/hooks/useUser'
