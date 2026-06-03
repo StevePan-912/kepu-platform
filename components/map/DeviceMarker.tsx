@@ -28,31 +28,30 @@ function createDeviceIcon(type: Device['type'], status: Device['status']): L.Div
   const svgPath = TYPE_SVG_PATHS[type ?? ''] ?? ''
   const hasSvg = svgPath.length > 0
 
+  // Map pin shape: circle top + pointed bottom, no rotation needed
   return L.divIcon({
     className: '',
     html: `
-      <div style="
-        width: 36px; height: 36px;
-        border-radius: 50% 50% 50% 4px;
-        transform: rotate(-45deg);
-        background: ${color};
-        border: 2px solid white;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-        display: flex; align-items: center; justify-content: center;
-      ">
-        ${hasSvg ? `
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(45deg);">
-            <path d="${svgPath}"/>
-          </svg>
-        ` : `
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="transform: rotate(45deg);">
-            <circle cx="12" cy="12" r="4"/>
-          </svg>
-        `}
-      </div>`,
-    iconSize: [36, 36],
-    iconAnchor: [18, 36],
-    popupAnchor: [0, -40],
+      <svg width="32" height="42" viewBox="0 0 32 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 0C7.163 0 0 7.163 0 16c0 10 16 26 16 26s16-16 16-26C32 7.163 24.837 0 16 0z" fill="${color}" stroke="white" stroke-width="2"/>
+        <circle cx="16" cy="16" r="9" fill="white" fill-opacity="0.25"/>
+        ${
+          hasSvg
+            ? `
+          <g transform="translate(16,16)">
+            <g transform="scale(0.5)">
+              <path d="${svgPath}" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" transform="translate(-12,-12)"/>
+            </g>
+          </g>
+        `
+            : `
+          <circle cx="16" cy="16" r="4" fill="white"/>
+        `
+        }
+      </svg>`,
+    iconSize: [32, 42],
+    iconAnchor: [16, 42],
+    popupAnchor: [0, -44],
   })
 }
 
@@ -66,8 +65,12 @@ export default function DeviceMarker({ device }: DeviceMarkerProps) {
 
   if (device.latitude == null || device.longitude == null) return null
 
-  const typeInfo = (DEVICE_TYPES as Record<string, any>)[device.type ?? '']
-  const statusInfo = (DEVICE_STATUS as Record<string, any>)[device.status]
+  const typeInfo = (DEVICE_TYPES as Record<string, { label: string; Icon: LucideIcon }>)[
+    device.type ?? ''
+  ]
+  const statusInfo = (DEVICE_STATUS as Record<string, { label: string; color: string }>)[
+    device.status
+  ]
   const icon = createDeviceIcon(device.type, device.status)
 
   function handleViewDetail() {

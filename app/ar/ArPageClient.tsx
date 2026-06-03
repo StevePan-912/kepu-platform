@@ -44,6 +44,7 @@ const MODELS: ArModel[] = [
       '猎户座星云（M42）是距地球约1344光年的弥漫星云，是夜空中最明亮的星云之一。你可以在秋冬季节用肉眼看到它。',
     category: 'astronomy',
     modelUrl: null,
+    sketchfabId: '7a4e69441af14971ae4686751646b057',
     ThumbnailIcon: Star,
     location: '展览路科普点1号',
     isNew: true,
@@ -57,6 +58,7 @@ const MODELS: ArModel[] = [
       '三角龙（Triceratops）生活在白垩纪晚期，距今约6800~6600万年前。它是最著名的食草恐龙之一，以三根角和颈盾著称。',
     category: 'paleontology',
     modelUrl: null,
+    sketchfabId: '06cb55f941d94dc8b95ac46f92d89e7c',
     ThumbnailIcon: Dna,
     location: '展览路科普点3号',
     narration:
@@ -69,6 +71,7 @@ const MODELS: ArModel[] = [
       '银杏是地球上现存最古老的树种之一，有"活化石"之称。其叶片的扇形叶脉结构独特，是辨认银杏的重要特征。',
     category: 'botany',
     modelUrl: null,
+    sketchfabId: '06c34533b4f441569bfa207aff7c8a19',
     ThumbnailIcon: Leaf,
     location: '展览路银杏道',
     narration:
@@ -89,8 +92,7 @@ const MODELS: ArModel[] = [
   {
     id: 'ar-5',
     title: '社区气象站',
-    description:
-      '了解展览路街道的实时气象数据，探索气温、湿度、风向等与社区生活的关系。',
+    description: '了解展览路街道的实时气象数据，探索气温、湿度、风向等与社区生活的关系。',
     category: 'neighborhood',
     modelUrl: null,
     ThumbnailIcon: Thermometer,
@@ -153,7 +155,7 @@ export default function ArPageClient() {
         {/* 3D model preview */}
         <div className="bg-card rounded-2xl overflow-hidden ring-1 ring-border">
           {/* Model display */}
-          <div className="relative h-64 bg-primary">
+          <div className="relative h-[480px] bg-primary">
             {activeModel.modelUrl ? (
               <ModelViewer
                 src={activeModel.modelUrl}
@@ -161,20 +163,29 @@ export default function ArPageClient() {
                 autoRotate
                 cameraControls
               />
+            ) : activeModel.sketchfabId ? (
+              <iframe
+                src={`https://sketchfab.com/models/${activeModel.sketchfabId}/embed?autostart=1&preload=1&ui_theme=dark&ui_infos=0&ui_controls=0&ui_stop=0&ui_inspector=0&ui_watermark=0&ui_watermark_link=0&ui_help=0&ui_settings=0&ui_vr=0&ui_fullscreen=0&ui_annotations=0`}
+                allow="autoplay; fullscreen; xr-spatial-tracking"
+                style={{ width: '100%', height: '100%', border: 'none' }}
+                title={activeModel.title}
+              />
             ) : (
               /* Placeholder when no model file */
               <div className="w-full h-full flex flex-col items-center justify-center">
                 <activeModel.ThumbnailIcon className="h-20 w-20 text-primary-foreground/80 mb-3" />
                 <p className="text-primary-foreground/50 text-xs">3D 模型展示区</p>
-                <p className="text-primary-foreground/30 text-xs mt-1">（实机部署后加载 .glb 模型）</p>
+                <p className="text-primary-foreground/30 text-xs mt-1">
+                  （实机部署后加载 .glb 模型）
+                </p>
               </div>
             )}
 
-            {/* Model title overlay */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent px-4 py-3">
-              <h2 className="text-white font-semibold text-base">{activeModel.title}</h2>
+            {/* Model title overlay - top right */}
+            <div className="absolute top-3 right-3 bg-black/40 backdrop-blur-sm rounded-lg px-3 py-2 text-right">
+              <h2 className="text-white font-semibold text-sm">{activeModel.title}</h2>
               {activeModel.location && (
-                <p className="text-white/60 text-xs flex items-center gap-1">
+                <p className="text-white/60 text-xs flex items-center gap-1 justify-end">
                   <MapPin className="h-3 w-3" />
                   {activeModel.location}
                 </p>
@@ -182,14 +193,46 @@ export default function ArPageClient() {
             </div>
 
             {/* Interaction hint */}
-            <div className="absolute top-3 right-3 bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1">
+            <div className="absolute bottom-3 left-3 bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1">
               <p className="text-white text-xs">拖拽旋转 · 双指缩放</p>
             </div>
           </div>
 
           {/* Model description */}
           <div className="p-4">
-            <p className="text-sm text-muted-foreground leading-relaxed">{activeModel.description}</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {activeModel.description}
+            </p>
+
+            {/* Ginkgo knowledge cards */}
+            {activeModel.id === 'ar-3' && (
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <div className="rounded-xl bg-accent p-3">
+                  <p className="text-xs font-semibold text-foreground mb-1">扇形叶片</p>
+                  <p className="text-xs text-muted-foreground">
+                    宽 5-8cm，顶端二裂或波状缺刻，基部楔形
+                  </p>
+                </div>
+                <div className="rounded-xl bg-accent p-3">
+                  <p className="text-xs font-semibold text-foreground mb-1">二叉叶脉</p>
+                  <p className="text-xs text-muted-foreground">
+                    叶脉呈二叉分支，是 2.7 亿年前的原始特征
+                  </p>
+                </div>
+                <div className="rounded-xl bg-accent p-3">
+                  <p className="text-xs font-semibold text-foreground mb-1">活化石</p>
+                  <p className="text-xs text-muted-foreground">
+                    与恐龙同时代，冰河期后唯一存活的银杏目物种
+                  </p>
+                </div>
+                <div className="rounded-xl bg-accent p-3">
+                  <p className="text-xs font-semibold text-foreground mb-1">秋季金黄</p>
+                  <p className="text-xs text-muted-foreground">
+                    秋末叶绿素降解，类胡萝卜素显现金黄色
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -223,9 +266,18 @@ export default function ArPageClient() {
             <div>
               <p className="font-semibold text-sm text-foreground mb-1">如何使用 AR 探境</p>
               <ul className="text-xs text-muted-foreground space-y-1">
-                <li>在地图上找到 <span className="font-medium text-foreground">AR探境点</span>（<Smartphone className="inline h-3 w-3" /> 标记）</li>
-                <li>到达现场后点击「<span className="font-medium text-foreground">开启AR探境</span>」扫描周围</li>
-                <li>对准设备上的 <span className="font-medium text-foreground">AR标识贴纸</span> 即可触发3D模型</li>
+                <li>
+                  在地图上找到 <span className="font-medium text-foreground">AR探境点</span>（
+                  <Smartphone className="inline h-3 w-3" /> 标记）
+                </li>
+                <li>
+                  到达现场后点击「<span className="font-medium text-foreground">开启AR探境</span>
+                  」扫描周围
+                </li>
+                <li>
+                  对准设备上的 <span className="font-medium text-foreground">AR标识贴纸</span>{' '}
+                  即可触发3D模型
+                </li>
                 <li>可点击模型进行交互，并开启语音讲解</li>
               </ul>
             </div>

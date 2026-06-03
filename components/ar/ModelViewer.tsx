@@ -9,6 +9,8 @@ interface ModelViewerProps {
   className?: string
   autoRotate?: boolean
   cameraControls?: boolean
+  cameraOrbit?: string
+  environmentImage?: string
 }
 
 export default function ModelViewer({
@@ -18,6 +20,8 @@ export default function ModelViewer({
   className = '',
   autoRotate = true,
   cameraControls = true,
+  cameraOrbit = '30deg 60deg 2.5',
+  environmentImage = 'neutral',
 }: ModelViewerProps) {
   const loaded = useRef(false)
 
@@ -39,9 +43,14 @@ export default function ModelViewer({
     poster,
     'auto-rotate': autoRotate ? '' : undefined,
     'camera-controls': cameraControls ? '' : undefined,
-    'shadow-intensity': '1',
-    exposure: '1',
+    'shadow-intensity': '0.5',
+    'shadow-softness': '0.8',
+    exposure: '1.2',
+    'camera-orbit': cameraOrbit,
+    'environment-image': environmentImage,
+    'interaction-prompt': 'auto',
+    loading: 'eager',
     className,
-    style: { width: '100%', height: '100%' },
+    style: { width: '100%', height: '100%', backgroundColor: '#1a1a2e' },
   })
 }

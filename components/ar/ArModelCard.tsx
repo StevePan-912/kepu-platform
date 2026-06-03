@@ -10,6 +10,7 @@ interface ArModel {
   description: string
   category: keyof typeof RESOURCE_CATEGORIES
   modelUrl: string | null
+  sketchfabId?: string
   ThumbnailIcon: LucideIcon
   location?: string
   isNew?: boolean
@@ -30,9 +31,10 @@ export default function ArModelCard({ model, isActive, onClick }: ArModelCardPro
       onClick={onClick}
       className={`
         w-full text-left rounded-2xl p-4 transition-all duration-200 border-2
-        ${isActive
-          ? 'border-primary bg-accent shadow-lg'
-          : 'border-border bg-background hover:border-primary/30 hover:shadow-md'
+        ${
+          isActive
+            ? 'border-primary bg-accent shadow-lg'
+            : 'border-border bg-background hover:border-primary/30 hover:shadow-md'
         }
       `}
     >
@@ -44,17 +46,23 @@ export default function ArModelCard({ model, isActive, onClick }: ArModelCardPro
             ${isActive ? 'bg-primary/10' : 'bg-muted'}
           `}
         >
-          <model.ThumbnailIcon className={`w-7 h-7 ${isActive ? 'text-primary' : 'text-muted-foreground'}`} />
+          <model.ThumbnailIcon
+            className={`w-7 h-7 ${isActive ? 'text-primary' : 'text-muted-foreground'}`}
+          />
         </div>
 
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <h3 className={`font-semibold text-sm truncate ${isActive ? 'text-primary' : 'text-foreground'}`}>
+            <h3
+              className={`font-semibold text-sm truncate ${isActive ? 'text-primary' : 'text-foreground'}`}
+            >
               {model.title}
             </h3>
             {model.isNew && (
-              <span className="text-xs bg-destructive text-destructive-foreground px-1.5 py-0.5 rounded-full shrink-0">新</span>
+              <span className="text-xs bg-destructive text-destructive-foreground px-1.5 py-0.5 rounded-full shrink-0">
+                新
+              </span>
             )}
           </div>
           <p className="text-xs text-muted-foreground line-clamp-2 mb-2">{model.description}</p>
