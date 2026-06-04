@@ -1,12 +1,23 @@
 'use client'
 
 import { useState } from 'react'
-import { Bell, MessageSquare, AlertTriangle, Mail, Smartphone } from 'lucide-react'
+import { Bell, MessageSquare, AlertTriangle, Mail, Smartphone, Check } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 
-const notificationSettings = [
+const STORAGE_KEY = 'admin_notification_settings'
+
+interface NotificationItem {
+  id: string
+  label: string
+  description: string
+  icon: typeof Bell
+  email: boolean
+  sms: boolean
+  push: boolean
+}
+
+const DEFAULT_SETTINGS: NotificationItem[] = [
   {
     id: 'device_alert',
     label: '设备告警通知',
@@ -36,20 +47,44 @@ const notificationSettings = [
   },
 ]
 
+function loadStoredNotifications(): NotificationItem[] {
+  if (typeof window === 'undefined') return DEFAULT_SETTINGS
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored) {
+    try {
+      const savedFlags = JSON.parse(stored) as Record<
+        string,
+        { email: boolean; sms: boolean; push: boolean }
+      >
+      return DEFAULT_SETTINGS.map((s) => (savedFlags[s.id] ? { ...s, ...savedFlags[s.id] } : s))
+    } catch {}
+  }
+  return DEFAULT_SETTINGS
+}
+
 export function SettingsNotifications() {
-  const [settings, setSettings] = useState(notificationSettings)
+  const [settings, setSettings] = useState(loadStoredNotifications)
   const [saving, setSaving] = useState(false)
+  const [saved, setSaved] = useState(false)
 
   const toggleSetting = (id: string, channel: 'email' | 'sms' | 'push') => {
-    setSettings(prev =>
-      prev.map(s => s.id === id ? { ...s, [channel]: !s[channel as keyof typeof s] } : s)
+    setSettings((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, [channel]: !s[channel as keyof typeof s] } : s)),
     )
+    setSaved(false)
   }
 
   const handleSave = async () => {
     setSaving(true)
-    await new Promise(r => setTimeout(r, 800))
+    // TODO: Supabase 连接后替换为 upsert('notification_settings', settings)
+    const flagsMap = Object.fromEntries(
+      settings.map((s) => [s.id, { email: s.email, sms: s.sms, push: s.push }]),
+    )
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(flagsMap))
+    await new Promise((r) => setTimeout(r, 300))
     setSaving(false)
+    setSaved(true)
+    setTimeout(() => setSaved(false), 3000)
   }
 
   return (
@@ -63,7 +98,7 @@ export function SettingsNotifications() {
       </CardHeader>
       <CardContent className="space-y-6">
         {/* 渠道说明 */}
-        <div className="flex gap-4 text-sm text-gray-500">
+        <div className="flex gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1.5">
             <Mail className="w-4 h-4" />
             <span>邮件</span>
@@ -80,45 +115,45 @@ export function SettingsNotifications() {
 
         {/* 通知项列表 */}
         <div className="space-y-4">
-          {settings.map(s => {
+          {settings.map((s) => {
             const Icon = s.icon
             return (
-              <div key={s.id} className="flex items-start justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+              <div
+                key={s.id}
+                className="flex items-start justify-between p-4 rounded-lg ring-1 ring-border hover:bg-accent/50 transition-colors"
+              >
                 <div className="flex items-start gap-3">
-                  <div className="p-2 bg-blue-50 rounded-lg">
-                    <Icon className="w-5 h-5 text-blue-600" />
+                  <div className="p-2 bg-accent rounded-lg">
+                    <Icon className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900">{s.label}</div>
-                    <div className="text-sm text-gray-500 mt-0.5">{s.description}</div>
+                    <div className="font-medium text-foreground">{s.label}</div>
+                    <div className="text-sm text-muted-foreground mt-0.5">{s.description}</div>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  {/* Email */}
                   <button
                     onClick={() => toggleSetting(s.id, 'email')}
                     className={`p-2 rounded-lg transition-colors ${
-                      s.email ? 'bg-blue-50 text-blue-600' : 'bg-gray-100 text-gray-400'
+                      s.email ? 'bg-accent text-primary' : 'bg-muted text-muted-foreground'
                     }`}
                     title="邮件通知"
                   >
                     <Mail className="w-4 h-4" />
                   </button>
-                  {/* SMS */}
                   <button
                     onClick={() => toggleSetting(s.id, 'sms')}
                     className={`p-2 rounded-lg transition-colors ${
-                      s.sms ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-400'
+                      s.sms ? 'bg-success/10 text-success' : 'bg-muted text-muted-foreground'
                     }`}
                     title="短信通知"
                   >
                     <Smartphone className="w-4 h-4" />
                   </button>
-                  {/* Push */}
                   <button
                     onClick={() => toggleSetting(s.id, 'push')}
                     className={`p-2 rounded-lg transition-colors ${
-                      s.push ? 'bg-purple-50 text-purple-600' : 'bg-gray-100 text-gray-400'
+                      s.push ? 'bg-accent text-primary' : 'bg-muted text-muted-foreground'
                     }`}
                     title="站内推送"
                   >
@@ -130,10 +165,16 @@ export function SettingsNotifications() {
           })}
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex items-center gap-3">
           <Button onClick={handleSave} disabled={saving}>
             {saving ? '保存中...' : '保存设置'}
           </Button>
+          {saved && (
+            <span className="text-sm text-success flex items-center gap-1">
+              <Check className="w-3.5 h-3.5" />
+              设置已保存
+            </span>
+          )}
         </div>
       </CardContent>
     </Card>

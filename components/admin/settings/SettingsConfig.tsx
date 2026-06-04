@@ -1,14 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { Cog } from 'lucide-react'
+import { Cog, Check } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Check } from 'lucide-react'
 
-// Mock system configs
-const systemConfigs = [
+const STORAGE_KEY = 'admin_system_configs'
+
+const DEFAULT_CONFIGS = [
   {
     key: 'site_name',
     label: '平台名称',
@@ -51,52 +51,66 @@ const systemConfigs = [
   },
 ]
 
+function loadStoredConfigs() {
+  if (typeof window === 'undefined') return DEFAULT_CONFIGS
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored) {
+    try {
+      const savedValues = JSON.parse(stored) as Record<string, string>
+      return DEFAULT_CONFIGS.map((c) =>
+        savedValues[c.key] ? { ...c, value: savedValues[c.key] } : c,
+      )
+    } catch {}
+  }
+  return DEFAULT_CONFIGS
+}
+
 export function SettingsConfig() {
-  const [configs, setConfigs] = useState(systemConfigs)
+  const [configs, setConfigs] = useState(loadStoredConfigs)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
   const handleChange = (key: string, value: string) => {
-    setConfigs(prev =>
-      prev.map(c => (c.key === key ? { ...c, value } : c))
-    )
+    setConfigs((prev) => prev.map((c) => (c.key === key ? { ...c, value } : c)))
     setSaved(false)
   }
 
   const handleSave = async () => {
     setSaving(true)
-    await new Promise(r => setTimeout(r, 800))
+    // TODO: Supabase 连接后替换为 upsert('system_configs', configs)
+    const valuesMap = Object.fromEntries(configs.map((c) => [c.key, c.value]))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(valuesMap))
+    await new Promise((r) => setTimeout(r, 300))
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
   }
 
-  const renderField = (config: (typeof systemConfigs)[number]) => {
+  const renderField = (config: (typeof DEFAULT_CONFIGS)[number]) => {
     switch (config.type) {
       case 'text':
         return (
-          <Input
-            value={config.value}
-            onChange={e => handleChange(config.key, e.target.value)}
-          />
+          <Input value={config.value} onChange={(e) => handleChange(config.key, e.target.value)} />
         )
       case 'number':
         return (
           <Input
             type="number"
             value={config.value}
-            onChange={e => handleChange(config.key, e.target.value)}
+            onChange={(e) => handleChange(config.key, e.target.value)}
           />
         )
       case 'select':
         return (
           <select
             value={config.value}
-            onChange={e => handleChange(config.key, e.target.value)}
+            onChange={(e) => handleChange(config.key, e.target.value)}
             className="w-full h-10 px-3 py-2 border border-input rounded-md text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           >
-            {config.options?.map(opt => (
-              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            {config.options?.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
             ))}
           </select>
         )
@@ -140,8 +154,11 @@ export function SettingsConfig() {
         <CardDescription>管理平台运行参数和功能开关</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {configs.map(config => (
-          <div key={config.key} className="flex items-start justify-between gap-4 py-3 border-b border-border last:border-0">
+        {configs.map((config) => (
+          <div
+            key={config.key}
+            className="flex items-start justify-between gap-4 py-3 border-b border-border last:border-0"
+          >
             <div className="flex-1 min-w-0">
               <div className="font-medium text-foreground">{config.label}</div>
               {config.description && (

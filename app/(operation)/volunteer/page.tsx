@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useTransition } from 'react'
 import { HeartHandshake } from 'lucide-react'
 import { NavBar } from '@/components/layout/NavBar'
 import { MobileNav } from '@/components/layout/MobileNav'
@@ -11,18 +11,94 @@ import { useUser } from '@/lib/hooks/useUser'
 import { supabase, isSupabaseConfigured } from '@/lib/supabase/client'
 import type { VolunteerTask, VolunteerRecord } from '@/lib/supabase/types'
 
+// Mock 志愿者任务数据
+const MOCK_TASKS: VolunteerTask[] = [
+  {
+    id: 'vt-1',
+    title: '科普设备巡检员',
+    description: '定期巡检社区内科普点播盒、智慧屏等设备的运行状态',
+    reward_points: 50,
+    status: 'open',
+    max_volunteers: 10,
+    start_time: new Date(Date.now() - 7 * 86400000).toISOString(),
+    end_time: new Date(Date.now() + 23 * 86400000).toISOString(),
+    created_at: new Date(Date.now() - 7 * 86400000).toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'vt-2',
+    title: '银杏道科普讲解员',
+    description: '在银杏大道为居民讲解银杏叶的生物学特征和历史文化',
+    reward_points: 80,
+    status: 'full',
+    max_volunteers: 5,
+    start_time: new Date(Date.now() - 14 * 86400000).toISOString(),
+    end_time: new Date(Date.now() + 16 * 86400000).toISOString(),
+    created_at: new Date(Date.now() - 14 * 86400000).toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'vt-3',
+    title: '社区科普活动摄影',
+    description: '负责社区科普活动的照片和视频拍摄，用于宣传展示',
+    reward_points: 100,
+    status: 'open',
+    max_volunteers: 3,
+    start_time: new Date(Date.now() - 3 * 86400000).toISOString(),
+    end_time: new Date(Date.now() + 27 * 86400000).toISOString(),
+    created_at: new Date(Date.now() - 3 * 86400000).toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+  {
+    id: 'vt-4',
+    title: '青少年科学实验辅导',
+    description: '协助指导社区青少年完成趣味科学实验，培养科学兴趣',
+    reward_points: 60,
+    status: 'open',
+    max_volunteers: 8,
+    start_time: new Date(Date.now() - 1 * 86400000).toISOString(),
+    end_time: new Date(Date.now() + 29 * 86400000).toISOString(),
+    created_at: new Date(Date.now() - 1 * 86400000).toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+]
+
+const MOCK_RECORDS: VolunteerRecord[] = [
+  {
+    id: 'vr-1',
+    user_id: '00000000-0000-0000-0000-000000000001',
+    task_id: 'vt-1',
+    status: 'completed',
+    service_hours: 2,
+    created_at: new Date(Date.now() - 30 * 86400000).toISOString(),
+    updated_at: new Date(Date.now() - 28 * 86400000).toISOString(),
+  },
+  {
+    id: 'vr-2',
+    user_id: '00000000-0000-0000-0000-000000000001',
+    task_id: 'vt-3',
+    status: 'approved',
+    service_hours: 4,
+    created_at: new Date(Date.now() - 5 * 86400000).toISOString(),
+    updated_at: new Date().toISOString(),
+  },
+]
+
 export default function VolunteerPage() {
   const { user, loginDemo } = useUser()
   const [tasks, setTasks] = useState<VolunteerTask[]>([])
   const [myRecords, setMyRecords] = useState<VolunteerRecord[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
+  const [, startTransition] = useTransition()
   const [activeTab, setActiveTab] = useState<'tasks' | 'records'>('tasks')
 
   const fetchData = async () => {
     setLoading(true)
 
     if (!isSupabaseConfigured) {
+      setTasks(MOCK_TASKS)
+      if (user) setMyRecords(MOCK_RECORDS)
       setLoading(false)
       return
     }
@@ -43,12 +119,15 @@ export default function VolunteerPage() {
       if (recordsData) setMyRecords(recordsData)
     }
 
-    if (tasksData) setTasks(tasksData)
+    setTasks(tasksData && tasksData.length > 0 ? tasksData : MOCK_TASKS)
     setLoading(false)
   }
 
   useEffect(() => {
-    fetchData()
+    startTransition(() => {
+      fetchData()
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
   // 计算总志愿时长
@@ -111,7 +190,9 @@ export default function VolunteerPage() {
           <button
             onClick={() => setActiveTab('records')}
             className={`flex-1 py-2 rounded-lg text-sm ${
-              activeTab === 'records' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground'
+              activeTab === 'records'
+                ? 'bg-primary text-primary-foreground'
+                : 'text-muted-foreground'
             }`}
           >
             我的记录
@@ -122,11 +203,7 @@ export default function VolunteerPage() {
       {/* 内容区 */}
       <div className="px-4 py-2">
         {activeTab === 'tasks' ? (
-          <TaskList
-            tasks={tasks}
-            loading={loading}
-            onJoin={() => setShowForm(true)}
-          />
+          <TaskList tasks={tasks} loading={loading} onJoin={() => setShowForm(true)} />
         ) : (
           <HourRecord records={myRecords} />
         )}

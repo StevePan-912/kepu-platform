@@ -84,6 +84,7 @@ const MODELS: ArModel[] = [
       '展览路街道依托"四层一体"智能科普服务体系，打造社区与自然和谐共生的生态科普示范区。',
     category: 'ecology',
     modelUrl: null,
+    sketchfabId: '3407138a2ed842079ad5dd5863b72c90',
     ThumbnailIcon: Microscope,
     location: '展览路社区中心',
     narration:
@@ -95,6 +96,7 @@ const MODELS: ArModel[] = [
     description: '了解展览路街道的实时气象数据，探索气温、湿度、风向等与社区生活的关系。',
     category: 'neighborhood',
     modelUrl: null,
+    sketchfabId: 'ede03d7195c346b5b43bb20c9de2a421',
     ThumbnailIcon: Thermometer,
     location: '展览路气象观测站',
     narration:

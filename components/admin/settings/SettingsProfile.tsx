@@ -6,24 +6,41 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
+const STORAGE_KEY = 'admin_profile'
+
+const DEFAULT_FORM = {
+  name: '管理员',
+  email: 'admin@kepu.com',
+  phone: '13800138000',
+  department: '技术部',
+}
+
+function loadStoredProfile() {
+  if (typeof window === 'undefined') return DEFAULT_FORM
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored) {
+    try {
+      return JSON.parse(stored)
+    } catch {}
+  }
+  return DEFAULT_FORM
+}
+
 export function SettingsProfile() {
-  const [form, setForm] = useState({
-    name: '管理员',
-    email: 'admin@kepu.com',
-    phone: '13800138000',
-    department: '技术部',
-  })
+  const [form, setForm] = useState(loadStoredProfile)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
   const handleChange = (key: string, value: string) => {
-    setForm(prev => ({ ...prev, [key]: value }))
+    setForm((prev) => ({ ...prev, [key]: value }))
     setSaved(false)
   }
 
   const handleSave = async () => {
     setSaving(true)
-    await new Promise(r => setTimeout(r, 800))
+    // TODO: Supabase 连接后替换为 upsert('admin_profiles', form)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(form))
+    await new Promise((r) => setTimeout(r, 300))
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
@@ -44,7 +61,9 @@ export function SettingsProfile() {
           <div className="w-16 h-16 rounded-full bg-accent flex items-center justify-center text-primary text-2xl font-semibold">
             {form.name.charAt(0)}
           </div>
-          <Button variant="outline" size="sm">更换头像</Button>
+          <Button variant="outline" size="sm">
+            更换头像
+          </Button>
         </div>
 
         {/* Form */}
@@ -55,7 +74,7 @@ export function SettingsProfile() {
               <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 value={form.name}
-                onChange={e => handleChange('name', e.target.value)}
+                onChange={(e) => handleChange('name', e.target.value)}
                 className="pl-9"
               />
             </div>
@@ -66,7 +85,7 @@ export function SettingsProfile() {
               <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 value={form.email}
-                onChange={e => handleChange('email', e.target.value)}
+                onChange={(e) => handleChange('email', e.target.value)}
                 className="pl-9"
                 type="email"
               />
@@ -78,7 +97,7 @@ export function SettingsProfile() {
               <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 value={form.phone}
-                onChange={e => handleChange('phone', e.target.value)}
+                onChange={(e) => handleChange('phone', e.target.value)}
                 className="pl-9"
               />
             </div>
@@ -89,7 +108,7 @@ export function SettingsProfile() {
               <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 value={form.department}
-                onChange={e => handleChange('department', e.target.value)}
+                onChange={(e) => handleChange('department', e.target.value)}
                 className="pl-9"
               />
             </div>

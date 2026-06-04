@@ -7,6 +7,7 @@ import { DEVICE_TYPES, DEVICE_STATUS } from '@/lib/constants/categories'
 import { useRouter } from 'next/navigation'
 import { useAppStore } from '@/lib/store'
 import { MapPin, BatteryMedium } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 // Device status marker colors (oklch-based, works across light/dark)
 const STATUS_COLORS: Record<string, string> = {
